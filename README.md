@@ -1,4 +1,4 @@
-# myApp
+# IONIC APP
 
 Aplicativo mobile inicial construído com **Ionic**, **Angular** e **Capacitor**, seguindo o template oficial com navegação por abas (tabs).
 
