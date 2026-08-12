@@ -1,6 +1,6 @@
 # IONIC APP
 
-Aplicativo mobile inicial construído com **Ionic**, **Angular** e **Capacitor**, seguindo o template oficial com navegação por abas (tabs).
+Aplicativo mobile inicial construído com **Ionic**, **Angular** e **Capacitor**, seguindo o template oficial com navegação por abas (tabs), com suporte nativo para **Android**.
 
 ## Tecnologias
 
@@ -11,6 +11,8 @@ Aplicativo mobile inicial construído com **Ionic**, **Angular** e **Capacitor**
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
 ![SCSS](https://img.shields.io/badge/SCSS-CC6699?style=for-the-badge&logo=sass&logoColor=white)
 ![Karma](https://img.shields.io/badge/Karma-2C3E50?style=for-the-badge&logo=karma&logoColor=white)
+![Android](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)
+![Gradle](https://img.shields.io/badge/Gradle-02303A?style=for-the-badge&logo=gradle&logoColor=white)
 
 ## Sobre o projeto
 
@@ -28,6 +30,8 @@ src/
     ├── explore-container/  # Componente de placeholder das abas
     ├── app.component.* # Componente raiz
     └── app.routes.ts   # Rotas da aplicação
+
+android/               # Projeto nativo Android (Capacitor/Gradle)
 ```
 
 ## Pré-requisitos
@@ -35,6 +39,9 @@ src/
 - [Node.js](https://nodejs.org/) (versão 20 ou superior)
 - [npm](https://www.npmjs.com/)
 - [Ionic CLI](https://ionicframework.com/docs/intro/cli) (opcional, mas recomendado)
+- [Android Studio](https://developer.android.com/studio) (para build nativo Android)
+- JDK 21+ e Android SDK configurados
+- Variáveis de ambiente: `JAVA_HOME`, `ANDROID_HOME`
 
 ## Como rodar o projeto
 
@@ -68,18 +75,26 @@ O build será gerado na pasta `www/`.
 
 ### 4. Rodar no dispositivo móvel (Capacitor)
 
-Adicione a plataforma desejada e sincronize o projeto:
+A plataforma **Android** já está configurada na pasta `android/`. Para sincronizar o build web com o projeto nativo:
 
 ```bash
-npx cap add android   # ou: npx cap add ios
-npx cap sync
+npm run build
+npx cap sync android
 ```
 
-Depois abra o projeto nativo:
+Abra o projeto nativo no Android Studio:
 
 ```bash
-npx cap open android  # ou: npx cap open ios
+npx cap open android
 ```
+
+Ou rode direto num dispositivo/emulador conectado:
+
+```bash
+npx cap run android
+```
+
+> **Nota:** para instalar novos plugins, instale o pacote via npm (`npm install <plugin>`) e depois rode `npx cap sync android` novamente.
 
 ### 5. Testes
 
@@ -92,6 +107,18 @@ npm test
 ```bash
 npm run lint
 ```
+
+## Versões
+
+| Pacote              | Versão  |
+| ------------------- | ------- |
+| Angular             | 20.3.27 |
+| Angular CLI         | 20.3.33 |
+| Ionic               | 8.x     |
+| Capacitor           | 8.5.0   |
+| Capacitor Android   | 8.5.0   |
+| JDK                 | 21      |
+| Gradle              | 8.14.3  |
 
 ## Scripts disponíveis
 
