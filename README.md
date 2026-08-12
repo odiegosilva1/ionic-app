@@ -39,9 +39,17 @@ android/               # Projeto nativo Android (Capacitor/Gradle)
 - [Node.js](https://nodejs.org/) (versão 20 ou superior)
 - [npm](https://www.npmjs.com/)
 - [Ionic CLI](https://ionicframework.com/docs/intro/cli) (opcional, mas recomendado)
-- [Android Studio](https://developer.android.com/studio) (para build nativo Android)
-- JDK 21+ e Android SDK configurados
-- Variáveis de ambiente: `JAVA_HOME`, `ANDROID_HOME`
+- JDK 21+ (exigido pelo Capacitor 8) e Android SDK configurados
+- [Android Studio](https://developer.android.com/studio) (para abrir/editar o projeto nativo)
+
+### Ambiente configurado nesta máquina
+
+- **JDK**: Temurin 21 em `~/.jdk/jdk-21.0.12+8` (o JDK do sistema é o Java 26, que não é compatível com o Gradle do Capacitor)
+- **Android SDK**: `~/Android/Sdk` (cmdline-tools, platform-tools, platform android-36, build-tools 35/36, emulador)
+- **Variáveis de ambiente** (definidas em `~/.bashrc`):
+  - `JAVA_HOME` → `$HOME/.jdk/jdk-21.0.12+8`
+  - `ANDROID_HOME` / `ANDROID_SDK_ROOT` → `$HOME/Android/Sdk`
+  - `PATH` → inclui `$JAVA_HOME/bin`, `$ANDROID_HOME/cmdline-tools/latest/bin` e `$ANDROID_HOME/platform-tools`
 
 ## Como rodar o projeto
 
@@ -82,7 +90,18 @@ npm run build
 npx cap sync android
 ```
 
-Abra o projeto nativo no Android Studio:
+### 5. Gerar o APK (sem precisar de emulador)
+
+```bash
+cd android
+./gradlew :app:assembleDebug
+```
+
+O APK será gerado em `android/app/build/outputs/apk/debug/app-debug.apk`.
+
+### 6. Executar num dispositivo ou emulador
+
+Abra o projeto no Android Studio:
 
 ```bash
 npx cap open android
@@ -91,18 +110,27 @@ npx cap open android
 Ou rode direto num dispositivo/emulador conectado:
 
 ```bash
-npx cap run android
+npx cap run android            # detecta o dispositivo automaticamente
+npx cap run android --target <id>   # escolhe o dispositivo (veja com adb devices)
 ```
+
+Verifique os dispositivos conectados:
+
+```bash
+adb devices
+```
+
+> **Nota sobre o emulador:** o AVD `myApp_AVD` está criado, mas o emulador requer aceleração de hardware (KVM). Em ambientes virtualizados sem acesso a `/dev/kvm`, ele não roda — nesse caso use um dispositivo físico via USB ou o navegador para testar.
 
 > **Nota:** para instalar novos plugins, instale o pacote via npm (`npm install <plugin>`) e depois rode `npx cap sync android` novamente.
 
-### 5. Testes
+### 7. Testes
 
 ```bash
 npm test
 ```
 
-### 6. Lint
+### 8. Lint
 
 ```bash
 npm run lint
