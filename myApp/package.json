@@ -1,7 +1,7 @@
 {
-  "name": "myApp",
+  "name": "pet-shop",
   "version": "0.0.1",
-  "author": "Ionic Framework",
+  "author": "Diego",
   "homepage": "https://ionicframework.com/",
   "scripts": {
     "ng": "ng",
@@ -21,6 +21,7 @@
     "@angular/platform-browser": "20.3.27",
     "@angular/platform-browser-dynamic": "20.3.27",
     "@angular/router": "20.3.27",
+    "@capacitor-community/sqlite": "^8.1.1",
     "@capacitor/android": "^8.5.0",
     "@capacitor/app": "8.1.1",
     "@capacitor/core": "8.5.0",
@@ -29,6 +30,7 @@
     "@capacitor/status-bar": "8.0.3",
     "@ionic/angular": "^8.0.0",
     "ionicons": "^7.0.0",
+    "jeep-sqlite": "^2.8.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
@@ -61,5 +63,5 @@
     "karma-jasmine-html-reporter": "~2.1.0",
     "typescript": "~5.9.0"
   },
-  "description": "An Ionic project"
+  "description": "Pet Shop - App mobile para gestão de pet shop"
 }
