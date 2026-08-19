@@ -38,9 +38,30 @@ export const routes: Routes = [
         ],
       },
       {
-        path: 'tab3',
-        loadComponent: () =>
-          import('../tab3/tab3.page').then((m) => m.Tab3Page),
+        path: 'pets',
+        children: [
+          {
+            path: '',
+            loadComponent: () =>
+              import('../pages/pets/pet-list/pet-list.component').then(
+                (m) => m.PetListComponent
+              ),
+          },
+          {
+            path: 'form',
+            loadComponent: () =>
+              import('../pages/pets/pet-form/pet-form.component').then(
+                (m) => m.PetFormComponent
+              ),
+          },
+          {
+            path: 'form/:id',
+            loadComponent: () =>
+              import('../pages/pets/pet-form/pet-form.component').then(
+                (m) => m.PetFormComponent
+              ),
+          },
+        ],
       },
       {
         path: '',
