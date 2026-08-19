@@ -1,0 +1,23 @@
+ion-item {
+  --min-height: 70px;
+}
+
+ion-icon[name="paw-outline"] {
+  color: var(--ion-color-secondary);
+}
+
+h2 {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+p {
+  color: var(--ion-color-medium);
+  font-size: 14px;
+  margin: 2px 0;
+}
+
+.tutor {
+  color: var(--ion-color-primary);
+  font-style: italic;
+}

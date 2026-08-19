@@ -1,9 +1,17 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
-  appName: 'myApp',
-  webDir: 'www'
+  appId: 'com.petshop.app',
+  appName: 'PetShop',
+  webDir: 'www',
+  server: {
+    androidScheme: 'https'
+  },
+  plugins: {
+    SQLite: {
+      androidDatabaseLocation: 'default',
+    },
+  },
 };
 
 export default config;
