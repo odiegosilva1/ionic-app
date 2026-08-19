@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Tab 1
+      PetShop
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -9,9 +9,55 @@
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Tab 1</ion-title>
+      <ion-title size="large">PetShop</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <app-explore-container name="Tab 1 page"></app-explore-container>
+  <div class="ion-padding" *ngIf="isDbReady">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Resumo</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="stats-container">
+          <div class="stat-item" (click)="goToClientes()">
+            <ion-icon name="people-outline"></ion-icon>
+            <div class="stat-info">
+              <span class="stat-number">{{ totalClientes }}</span>
+              <span class="stat-label">Clientes</span>
+            </div>
+          </div>
+
+          <div class="stat-item" (click)="goToPets()">
+            <ion-icon name="paw-outline"></ion-icon>
+            <div class="stat-info">
+              <span class="stat-number">{{ totalPets }}</span>
+              <span class="stat-label">Pets</span>
+            </div>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Acesso Rapido</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-button expand="block" (click)="goToClientes()">
+          <ion-icon name="person-add-outline" slot="start"></ion-icon>
+          Cadastrar Cliente
+        </ion-button>
+        <ion-button expand="block" (click)="goToPets()">
+          <ion-icon name="add-circle-outline" slot="start"></ion-icon>
+          Cadastrar Pet
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <div class="ion-padding ion-text-center" *ngIf="!isDbReady">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Carregando banco de dados...</p>
+  </div>
 </ion-content>
