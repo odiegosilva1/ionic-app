@@ -1,3 +1,17 @@
+.logo-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+
+  img {
+    /* responsivo: cresce com a largura da tela até o limite */
+    width: min(45vw, 160px);
+    height: auto;
+    max-width: 100%;
+  }
+}
+
 .stats-container {
   display: flex;
   justify-content: space-around;

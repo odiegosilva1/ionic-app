@@ -1,7 +1,9 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
-      PetShop
+    <ion-title class="ion-no-padding">
+      <div class="logo-wrap">
+        <img src="assets/icon/logo-pet.png" alt="Logo PetShop" />
+      </div>
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -9,11 +11,15 @@
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">PetShop</ion-title>
+      <ion-title size="large" class="ion-no-padding">
+        <div class="logo-wrap">
+          <img src="assets/icon/logo-pet.png" alt="Logo PetShop" />
+        </div>
+      </ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <div class="ion-padding" *ngIf="isDbReady">
+  <div class="ion-padding">
     <ion-card>
       <ion-card-header>
         <ion-card-title>Resumo</ion-card-title>
@@ -54,10 +60,5 @@
         </ion-button>
       </ion-card-content>
     </ion-card>
-  </div>
-
-  <div class="ion-padding ion-text-center" *ngIf="!isDbReady">
-    <ion-spinner name="crescent"></ion-spinner>
-    <p>Carregando banco de dados...</p>
   </div>
 </ion-content>

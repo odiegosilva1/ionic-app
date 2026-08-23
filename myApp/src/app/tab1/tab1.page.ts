@@ -1,10 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { ClienteService } from '../services/cliente.service';
 import { PetService } from '../services/pet.service';
-import { DatabaseService } from '../services/database.service';
 
 @Component({
   selector: 'app-tab1',
@@ -16,27 +15,13 @@ import { DatabaseService } from '../services/database.service';
 export class Tab1Page implements OnInit {
   totalClientes = 0;
   totalPets = 0;
-  isDbReady = false;
 
-  constructor(
-    private clienteService: ClienteService,
-    private petService: PetService,
-    private databaseService: DatabaseService,
-    private router: Router
-  ) {}
+  private clienteService = inject(ClienteService);
+  private petService = inject(PetService);
+  private router = inject(Router);
 
   async ngOnInit() {
-    await this.initDatabase();
-  }
-
-  async initDatabase() {
-    try {
-      await this.databaseService.initDatabase();
-      this.isDbReady = true;
-      await this.loadCounts();
-    } catch (error) {
-      console.error('Erro ao inicializar banco de dados:', error);
-    }
+    await this.loadCounts();
   }
 
   async loadCounts() {
