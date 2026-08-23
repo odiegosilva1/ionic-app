@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Cliente } from '../../models/cliente.model';
-import { ClienteService } from '../../services/cliente.service';
+import { Cliente } from '../../../models/cliente.model';
+import { ClienteService } from '../../../services/cliente.service';
 
 @Component({
   selector: 'app-cliente-form',
@@ -24,12 +24,10 @@ export class ClienteFormComponent implements OnInit {
   isEditing = false;
   clienteId: number | null = null;
 
-  constructor(
-    private clienteService: ClienteService,
-    private router: Router,
-    private route: ActivatedRoute,
-    private toastController: ToastController
-  ) {}
+  private clienteService = inject(ClienteService);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private toastController = inject(ToastController);
 
   async ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');

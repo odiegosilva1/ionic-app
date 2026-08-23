@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Pet } from '../../models/pet.model';
-import { Cliente } from '../../models/cliente.model';
-import { PetService } from '../../services/pet.service';
-import { ClienteService } from '../../services/cliente.service';
+import { Pet } from '../../../models/pet.model';
+import { Cliente } from '../../../models/cliente.model';
+import { PetService } from '../../../services/pet.service';
+import { ClienteService } from '../../../services/cliente.service';
 
 @Component({
   selector: 'app-pet-form',
@@ -38,13 +38,11 @@ export class PetFormComponent implements OnInit {
     { value: 'outro', label: 'Outro' },
   ];
 
-  constructor(
-    private petService: PetService,
-    private clienteService: ClienteService,
-    private router: Router,
-    private route: ActivatedRoute,
-    private toastController: ToastController
-  ) {}
+  private petService = inject(PetService);
+  private clienteService = inject(ClienteService);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private toastController = inject(ToastController);
 
   async ngOnInit() {
     await this.loadClientes();

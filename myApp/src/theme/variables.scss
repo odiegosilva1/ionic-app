@@ -1,2 +1,103 @@
-// For information on how to create your own theme, please refer to:
-// https://ionicframework.com/docs/theming/
+/*
+ * Paleta de cores do app (fundo branco + elementos em tons de lilás)
+ * Para mais informações sobre temas:
+ * https://ionicframework.com/docs/theming/colors
+ */
+
+:root {
+  /* Fonte sem serifa */
+  --ion-font-family: 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial,
+    sans-serif;
+
+  /* Primary - lilás médio */
+  --ion-color-primary: #8e6fd8;
+  --ion-color-primary-rgb: 142, 111, 216;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #7d62be;
+  --ion-color-primary-tint: #997ddc;
+
+  /* Secondary - lilás claro */
+  --ion-color-secondary: #b79ced;
+  --ion-color-secondary-rgb: 183, 156, 237;
+  --ion-color-secondary-contrast: #241a3e;
+  --ion-color-secondary-contrast-rgb: 36, 26, 62;
+  --ion-color-secondary-shade: #a189d1;
+  --ion-color-secondary-tint: #bea6ef;
+
+  /* Tertiary - lilás escuro */
+  --ion-color-tertiary: #6c51b8;
+  --ion-color-tertiary-rgb: 108, 81, 184;
+  --ion-color-tertiary-contrast: #ffffff;
+  --ion-color-tertiary-contrast-rgb: 255, 255, 255;
+  --ion-color-tertiary-shade: #5f47a2;
+  --ion-color-tertiary-tint: #7b62bf;
+
+  /* Success - verde menta */
+  --ion-color-success: #34c98e;
+  --ion-color-success-rgb: 52, 201, 142;
+  --ion-color-success-contrast: #0c291d;
+  --ion-color-success-contrast-rgb: 12, 41, 29;
+  --ion-color-success-shade: #2eb17d;
+  --ion-color-success-tint: #48ce99;
+
+  /* Warning - âmbar suave */
+  --ion-color-warning: #f2b94b;
+  --ion-color-warning-rgb: 242, 185, 75;
+  --ion-color-warning-contrast: #33230a;
+  --ion-color-warning-contrast-rgb: 51, 35, 10;
+  --ion-color-warning-shade: #d5a342;
+  --ion-color-warning-tint: #f3c05d;
+
+  /* Danger - rosa avermelhado */
+  --ion-color-danger: #e85d75;
+  --ion-color-danger-rgb: 232, 93, 117;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-contrast-rgb: 255, 255, 255;
+  --ion-color-danger-shade: #cc5267;
+  --ion-color-danger-tint: #ea6d83;
+}
+
+/*
+ * Tema claro com toques lilás.
+ * Os seletores :root.ios/:root.md garantem prioridade sobre
+ * os estilos de plataforma do Ionic.
+ */
+:root,
+:root.ios,
+:root.md {
+  --ion-background-color: #ffffff;
+  --ion-background-color-rgb: 255, 255, 255;
+  --ion-text-color: #2b2140;
+  --ion-text-color-rgb: 43, 33, 64;
+
+  --ion-card-background: #fdfcff;
+  --ion-item-background: #ffffff;
+  --ion-toolbar-background: #ffffff;
+  --ion-toolbar-color: #2b2140;
+  --ion-tab-bar-background: #ffffff;
+  --ion-tab-bar-color: #9d92bd;
+  --ion-tab-bar-color-selected: #8e6fd8;
+  --ion-searchbar-background: rgba(142, 111, 216, 0.08);
+
+  --ion-color-light: #f4f1fa;
+  --ion-color-light-rgb: 244, 241, 250;
+  --ion-color-light-contrast: #2b2140;
+  --ion-color-light-contrast-rgb: 43, 33, 64;
+  --ion-color-light-shade: #d7d4dc;
+  --ion-color-light-tint: #f5f2fb;
+
+  --ion-color-medium: #7d7594;
+  --ion-color-medium-rgb: 125, 117, 148;
+  --ion-color-medium-contrast: #ffffff;
+  --ion-color-medium-contrast-rgb: 255, 255, 255;
+  --ion-color-medium-shade: #6e6782;
+  --ion-color-medium-tint: #8a83a0;
+
+  --ion-color-dark: #2b2140;
+  --ion-color-dark-rgb: 43, 33, 64;
+  --ion-color-dark-contrast: #ffffff;
+  --ion-color-dark-contrast-rgb: 255, 255, 255;
+  --ion-color-dark-shade: #261d38;
+  --ion-color-dark-tint: #403753;
+}

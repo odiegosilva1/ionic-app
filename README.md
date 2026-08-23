@@ -100,7 +100,7 @@ npm install
 npm start
 ```
 
-A aplicação estará disponível em `http://localhost:8100`.
+A aplicação estará disponível em `http://localhost:4200`.
 
 ### 3. Build de produção
 
@@ -154,14 +154,19 @@ docs: descrição
 
 ## Versões
 
-| Pacote              | Versão  |
-| ------------------- | ------- |
-| Angular             | 20.3.27 |
-| Angular CLI         | 20.3.33 |
-| Ionic               | 8.x     |
-| Capacitor           | 8.5.0   |
-| @capacitor-community/sqlite | 8.1.1 |
-| jeep-sqlite         | 2.8.0   |
+| Pacote                        | Versão  |
+| ----------------------------- | ------- |
+| Angular                       | 20.3.27 |
+| Angular CLI                   | 20.3.33 |
+| @angular-devkit/build-angular | 20.3.34 |
+| Ionic                         | 8.8.19  |
+| Capacitor                     | 8.5.0   |
+| TypeScript                    | 5.9.3   |
+
+## Solução de problemas
+
+- **Erro `The current version of "@angular/build" supports Angular versions ^22.0.0`**: as versões de `@angular-devkit/build-angular`, `@angular/cli` e dos pacotes `@angular/*` devem estar alinhadas na mesma versão major/minor do Angular (neste projeto, 20.x). Se o `package.json` tiver `@angular-devkit/build-angular` com caret em outra major (ex.: `^22.1.5`), corrija para `~20.x` e rode `rm -rf node_modules package-lock.json && npm install`.
+- **Porta do dev server**: como o script `start` usa `ng serve` diretamente (e não o Ionic CLI), a porta padrão é **4200**, e não 8100.
 
 ## Scripts disponíveis
 

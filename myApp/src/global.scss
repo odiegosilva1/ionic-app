@@ -34,4 +34,19 @@
 
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import '@ionic/angular/css/palettes/dark.system.css';
+/* @import '@ionic/angular/css/palettes/dark.system.css'; */
+
+/* Ícones das listas e abas em lilás */
+ion-item ion-icon[slot='start'] {
+  color: var(--ion-color-primary);
+}
+
+ion-fab-button {
+  --background: var(--ion-color-primary);
+}
+
+/* Contorno lilás suave nos cards sobre o fundo branco */
+ion-card {
+  border: 1px solid rgba(142, 111, 216, 0.14);
+  box-shadow: none;
+}
