@@ -1,90 +1,78 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Pet, PetComTutor } from '../models/pet.model';
-import { DatabaseService } from './database.service';
+import { Cliente } from '../models/cliente.model';
+import { StorageService, STORAGE_KEYS } from './storage.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PetService {
-  private readonly TABLE = 'pets';
+  private storage = inject(StorageService);
 
-  constructor(private databaseService: DatabaseService) {}
+  private async withTutorNome(): Promise<PetComTutor[]> {
+    const pets = this.storage.read<Pet>(STORAGE_KEYS.pets);
+    if (!pets.length) return [];
+
+    const clientes = await this.storage.read<Cliente>(STORAGE_KEYS.clientes);
+    return pets
+      .map((pet) => ({
+        ...pet,
+        tutor_nome: clientes.find((c) => c.id === pet.cliente_id)?.nome,
+      }))
+      .sort((a, b) => a.nome.localeCompare(b.nome));
+  }
 
   async getAll(): Promise<PetComTutor[]> {
-    return this.databaseService.query<PetComTutor>(
-      `SELECT p.*, c.nome as tutor_nome
-       FROM ${this.TABLE} p
-       LEFT JOIN clientes c ON p.cliente_id = c.id
-       ORDER BY p.nome`
-    );
+    return this.withTutorNome();
   }
 
   async getById(id: number): Promise<PetComTutor | null> {
-    return this.databaseService.query<PetComTutor>(
-      `SELECT p.*, c.nome as tutor_nome
-       FROM ${this.TABLE} p
-       LEFT JOIN clientes c ON p.cliente_id = c.id
-       WHERE p.id = ?`,
-      [id]
-    ).then((results) => results[0] || null);
+    const pets = await this.withTutorNome();
+    return pets.find((p) => p.id === id) ?? null;
   }
 
   async getByClienteId(clienteId: number): Promise<PetComTutor[]> {
-    return this.databaseService.query<PetComTutor>(
-      `SELECT p.*, c.nome as tutor_nome
-       FROM ${this.TABLE} p
-       LEFT JOIN clientes c ON p.cliente_id = c.id
-       WHERE p.cliente_id = ?
-       ORDER BY p.nome`,
-      [clienteId]
-    );
+    const pets = await this.withTutorNome();
+    return pets.filter((p) => p.cliente_id === clienteId);
   }
 
   async insert(pet: Pet): Promise<number> {
-    return this.databaseService.insert(this.TABLE, {
-      nome: pet.nome,
-      especie: pet.especie,
-      raca: pet.raca,
-      idade: pet.idade,
-      peso: pet.peso,
-      cliente_id: pet.cliente_id,
-    });
+    const pets = this.storage.read<Pet>(STORAGE_KEYS.pets);
+    const novoId = this.storage.nextId(pets);
+    const novoPet: Pet = { ...pet, id: novoId, created_at: new Date().toISOString() };
+    this.storage.write(STORAGE_KEYS.pets, [...pets, novoPet]);
+    return novoId;
   }
 
   async update(id: number, pet: Pet): Promise<void> {
-    return this.databaseService.update(this.TABLE, id, {
-      nome: pet.nome,
-      especie: pet.especie,
-      raca: pet.raca,
-      idade: pet.idade,
-      peso: pet.peso,
-      cliente_id: pet.cliente_id,
-    });
+    const pets = this.storage.read<Pet>(STORAGE_KEYS.pets);
+    const atualizados = pets.map((p) => (p.id === id ? { ...p, ...pet, id } : p));
+    this.storage.write(STORAGE_KEYS.pets, atualizados);
   }
 
   async delete(id: number): Promise<void> {
-    return this.databaseService.delete(this.TABLE, id);
+    const pets = this.storage.read<Pet>(STORAGE_KEYS.pets);
+    this.storage.write(
+      STORAGE_KEYS.pets,
+      pets.filter((p) => p.id !== id)
+    );
   }
 
   async search(termo: string): Promise<PetComTutor[]> {
-    if (!termo.trim()) {
-      return this.getAll();
-    }
+    const pets = await this.withTutorNome();
+    const t = termo.trim().toLowerCase();
+    if (!t) return pets;
 
-    return this.databaseService.query<PetComTutor>(
-      `SELECT p.*, c.nome as tutor_nome
-       FROM ${this.TABLE} p
-       LEFT JOIN clientes c ON p.cliente_id = c.id
-       WHERE p.nome LIKE ? OR p.especie LIKE ? OR p.raca LIKE ? OR c.nome LIKE ?
-       ORDER BY p.nome`,
-      [`%${termo}%`, `%${termo}%`, `%${termo}%`, `%${termo}%`]
+    return pets.filter(
+      (p) =>
+        p.nome.toLowerCase().includes(t) ||
+        p.especie.toLowerCase().includes(t) ||
+        p.raca.toLowerCase().includes(t) ||
+        (p.tutor_nome ?? '').toLowerCase().includes(t)
     );
   }
 
   async count(): Promise<number> {
-    const result = await this.databaseService.query<{ total: number }>(
-      `SELECT COUNT(*) as total FROM ${this.TABLE}`
-    );
-    return result[0]?.total ?? 0;
+    return this.storage.read<Pet>(STORAGE_KEYS.pets).length;
   }
 }
