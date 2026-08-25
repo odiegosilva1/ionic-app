@@ -138,9 +138,11 @@ if (fs.existsSync(path.join(sslDir, 'cert.pem')) && fs.existsSync(path.join(sslD
   https.createServer(options, app).listen(PORT, () => {
     console.log(`🔒 API HTTPS rodando em https://localhost:${PORT}`);
   });
+  app.listen(PORT + 1, () => {
+    console.log(`🔓 API HTTP fallback em http://localhost:${PORT + 1}`);
+  });
 } else {
   app.listen(PORT, () => {
     console.log(`🔓 API HTTP rodando em http://localhost:${PORT}`);
-    console.log('   Para HTTPS, gere certificados em server/ssl/');
   });
 }
