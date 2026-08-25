@@ -17,6 +17,10 @@ export class ClienteService {
     return this.storage.read<Cliente>(STORAGE_KEYS.clientes).find((c) => c.id === id) ?? null;
   }
 
+  async getByUsuarioId(usuarioId: string): Promise<Cliente | null> {
+    return this.storage.read<Cliente>(STORAGE_KEYS.clientes).find((c) => c.usuario_id === usuarioId) ?? null;
+  }
+
   async insert(cliente: Cliente): Promise<number> {
     const clientes = await this.getAll();
     const novoId = this.storage.nextId(clientes);

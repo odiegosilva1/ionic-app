@@ -17,7 +17,27 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
+  <div class="meu-perfil" *ngIf="meuPerfil">
+    <ion-card color="primary" (click)="editMeuPerfil()" button>
+      <ion-card-header>
+        <ion-card-subtitle>Meu Perfil</ion-card-subtitle>
+        <ion-card-title>{{ meuPerfil.nome }}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p *ngIf="meuPerfil.email">{{ meuPerfil.email }}</p>
+        <p *ngIf="meuPerfil.telefone">{{ meuPerfil.telefone }}</p>
+        <p *ngIf="!meuPerfil.telefone && !meuPerfil.endereco" class="ion-text-italic">Toque para completar seu perfil</p>
+        <div class="perfil-action">
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
   <ion-list *ngIf="clientes.length > 0">
+    <ion-list-header>
+      <ion-label color="medium">Outros Clientes</ion-label>
+    </ion-list-header>
     <ion-item-sliding *ngFor="let cliente of clientes">
       <ion-item (click)="goToForm(cliente)" button>
         <ion-icon name="person-outline" slot="start"></ion-icon>
@@ -37,7 +57,7 @@
     </ion-item-sliding>
   </ion-list>
 
-  <ion-list *ngIf="clientes.length === 0">
+  <ion-list *ngIf="clientes.length === 0 && !meuPerfil">
     <ion-item>
       <ion-label class="ion-text-center">
         <p>Nenhum cliente encontrado</p>

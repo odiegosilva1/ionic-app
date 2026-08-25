@@ -5,6 +5,7 @@ import { IonicModule, AlertController, ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Cliente } from '../../../models/cliente.model';
 import { ClienteService } from '../../../services/cliente.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-cliente-list',
@@ -15,9 +16,11 @@ import { ClienteService } from '../../../services/cliente.service';
 })
 export class ClienteListComponent implements OnInit {
   clientes: Cliente[] = [];
+  meuPerfil: Cliente | null = null;
   searchTerm = '';
 
   private clienteService = inject(ClienteService);
+  private authService = inject(AuthService);
   private router = inject(Router);
   private alertController = inject(AlertController);
   private toastController = inject(ToastController);
@@ -28,7 +31,16 @@ export class ClienteListComponent implements OnInit {
 
   async loadClientes() {
     try {
-      this.clientes = await this.clienteService.getAll();
+      const usuario = this.authService.getCurrentUser();
+      const todos = await this.clienteService.getAll();
+
+      if (usuario) {
+        this.meuPerfil = todos.find((c) => c.usuario_id === usuario.id) ?? null;
+        this.clientes = todos.filter((c) => c.usuario_id !== usuario.id);
+      } else {
+        this.meuPerfil = null;
+        this.clientes = todos;
+      }
     } catch (error) {
       console.error('Erro ao carregar clientes:', error);
       await this.showToast('Erro ao carregar clientes', 'danger');
@@ -53,6 +65,12 @@ export class ClienteListComponent implements OnInit {
       this.router.navigate(['/tabs/clientes/form', cliente.id]);
     } else {
       this.router.navigate(['/tabs/clientes/form']);
+    }
+  }
+
+  editMeuPerfil() {
+    if (this.meuPerfil) {
+      this.router.navigate(['/tabs/clientes/form', this.meuPerfil.id]);
     }
   }
 

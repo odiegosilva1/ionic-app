@@ -4,6 +4,7 @@ import { IonicModule } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { ClienteService } from '../services/cliente.service';
 import { PetService } from '../services/pet.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-tab1',
@@ -15,12 +16,18 @@ import { PetService } from '../services/pet.service';
 export class Tab1Page implements OnInit {
   totalClientes = 0;
   totalPets = 0;
+  userName = '';
 
   private clienteService = inject(ClienteService);
   private petService = inject(PetService);
+  private authService = inject(AuthService);
   private router = inject(Router);
 
   async ngOnInit() {
+    const user = this.authService.getCurrentUser();
+    if (user) {
+      this.userName = user.nome;
+    }
     await this.loadCounts();
   }
 

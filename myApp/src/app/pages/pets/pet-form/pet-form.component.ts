@@ -7,6 +7,7 @@ import { Pet } from '../../../models/pet.model';
 import { Cliente } from '../../../models/cliente.model';
 import { PetService } from '../../../services/pet.service';
 import { ClienteService } from '../../../services/cliente.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-pet-form',
@@ -26,6 +27,7 @@ export class PetFormComponent implements OnInit {
   };
 
   clientes: Cliente[] = [];
+  meuPerfilId: number | null = null;
   isEditing = false;
   petId: number | null = null;
 
@@ -40,6 +42,7 @@ export class PetFormComponent implements OnInit {
 
   private petService = inject(PetService);
   private clienteService = inject(ClienteService);
+  private authService = inject(AuthService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private toastController = inject(ToastController);
@@ -52,12 +55,24 @@ export class PetFormComponent implements OnInit {
       this.isEditing = true;
       this.petId = parseInt(id, 10);
       await this.loadPet();
+    } else if (this.meuPerfilId) {
+      this.pet.cliente_id = this.meuPerfilId;
     }
   }
 
   async loadClientes() {
     try {
-      this.clientes = await this.clienteService.getAll();
+      const usuario = this.authService.getCurrentUser();
+      const todos = await this.clienteService.getAll();
+
+      if (usuario) {
+        const meuPerfil = todos.find((c) => c.usuario_id === usuario.id);
+        if (meuPerfil?.id) {
+          this.meuPerfilId = meuPerfil.id;
+        }
+      }
+
+      this.clientes = todos;
     } catch (error) {
       console.error('Erro ao carregar clientes:', error);
     }

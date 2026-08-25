@@ -20,6 +20,11 @@
   </ion-header>
 
   <div class="ion-padding">
+    <div class="welcome-msg" *ngIf="userName">
+      <ion-icon name="person-outline"></ion-icon>
+      <span>Olá, <strong>{{ userName }}</strong>!</span>
+    </div>
+
     <ion-card>
       <ion-card-header>
         <ion-card-title>Resumo</ion-card-title>
