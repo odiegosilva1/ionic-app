@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 export const STORAGE_KEYS = {
   clientes: 'petshop_clientes',
   pets: 'petshop_pets',
-  usuarios: 'petshop_usuarios',
 } as const;
 
 @Injectable({
