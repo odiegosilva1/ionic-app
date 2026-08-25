@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
+import { sanitizeInput } from '../../../utils/sanitize';
 
 interface PasswordRule {
   label: string;
@@ -89,8 +90,8 @@ export class CadastroPage {
     }
 
     const result = await this.authService.register({
-      nome: this.nome,
-      email: this.email,
+      nome: sanitizeInput(this.nome.trim()),
+      email: this.email.trim().toLowerCase(),
       senha: this.senha,
     });
 

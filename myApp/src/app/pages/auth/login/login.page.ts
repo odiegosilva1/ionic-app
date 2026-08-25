@@ -38,7 +38,7 @@ export class LoginPage {
       return;
     }
 
-    const result = await this.authService.login(this.email, this.senha);
+    const result = await this.authService.login(this.email.trim().toLowerCase(), this.senha);
 
     if (result.success) {
       await this.showToast(result.message, 'success');
