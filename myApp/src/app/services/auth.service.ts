@@ -5,6 +5,7 @@ import { StorageService, STORAGE_KEYS } from './storage.service';
 
 const STORAGE_KEY = 'petshop_usuarios';
 const SESSION_KEY = 'petshop_session';
+const HASH_PREFIX = 'sha256:';
 
 @Injectable({
   providedIn: 'root',
@@ -13,6 +14,14 @@ export class AuthService {
   private storage = inject(StorageService);
   private router = inject(Router);
 
+  private async hashPassword(password: string): Promise<string> {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return HASH_PREFIX + hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
+  }
+
   async register(usuario: Omit<Usuario, 'id' | 'created_at'>): Promise<{ success: boolean; message: string }> {
     const usuarios = this.storage.read<Usuario>(STORAGE_KEY);
 
@@ -20,9 +29,11 @@ export class AuthService {
       return { success: false, message: 'Email já cadastrado' };
     }
 
+    const hashedSenha = await this.hashPassword(usuario.senha);
     const novoId = this.storage.nextId(usuarios);
     const novoUsuario: Usuario = {
       ...usuario,
+      senha: hashedSenha,
       id: novoId,
       created_at: new Date().toISOString(),
     };
@@ -33,8 +44,10 @@ export class AuthService {
 
   async login(email: string, senha: string): Promise<{ success: boolean; message: string }> {
     const usuarios = this.storage.read<Usuario>(STORAGE_KEY);
+    const hashedSenha = await this.hashPassword(senha);
+
     const usuario = usuarios.find(
-      (u) => u.email.toLowerCase() === email.toLowerCase() && u.senha === senha
+      (u) => u.email.toLowerCase() === email.toLowerCase() && u.senha === hashedSenha
     );
 
     if (!usuario) {
