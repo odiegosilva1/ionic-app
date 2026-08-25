@@ -1,0 +1,49 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Entrar</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="login-container">
+    <div class="logo-section">
+      <ion-icon name="paw-outline" class="logo-icon"></ion-icon>
+      <h1>PetShop</h1>
+      <p>Faça login para continuar</p>
+    </div>
+
+    <form (ngSubmit)="onLogin()">
+      <ion-list>
+        <ion-item>
+          <ion-label position="stacked">Email</ion-label>
+          <ion-input
+            [(ngModel)]="email"
+            name="email"
+            type="email"
+            placeholder="seu@email.com"
+            autocomplete="email"
+          ></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Senha</ion-label>
+          <ion-input
+            [(ngModel)]="senha"
+            name="senha"
+            type="password"
+            placeholder="Sua senha"
+            autocomplete="current-password"
+          ></ion-input>
+        </ion-item>
+      </ion-list>
+
+      <ion-button expand="block" type="submit" class="login-btn">
+        Entrar
+      </ion-button>
+    </form>
+
+    <div class="register-link">
+      <p>Não tem conta? <a routerLink="/cadastro">Cadastre-se</a></p>
+    </div>
+  </div>
+</ion-content>

@@ -1,13 +1,12 @@
 # PetShop
 
-Aplicativo mobile para gestão de pet shop construído com **Ionic**, **Angular** e **Capacitor**, utilizando **SQLite** para armazenamento local de dados.
+Aplicativo mobile para gestão de pet shop construído com **Ionic**, **Angular** e **Capacitor**, utilizando **localStorage** para armazenamento local de dados.
 
 ## Tecnologias
 
 ![Ionic](https://img.shields.io/badge/Ionic-3880FF?style=for-the-badge&logo=ionic&logoColor=white)
 ![Angular](https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white)
 ![Capacitor](https://img.shields.io/badge/Capacitor-119EFF?style=for-the-badge&logo=capacitor&logoColor=white)
-![SQLite](https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
 ![SCSS](https://img.shields.io/badge/SCSS-CC6699?style=for-the-badge&logo=sass&logoColor=white)
@@ -15,13 +14,24 @@ Aplicativo mobile para gestão de pet shop construído com **Ionic**, **Angular*
 
 ## Sobre o projeto
 
-O **PetShop** é um aplicativo híbrido que roda no navegador e em dispositivos móveis (Android/iOS) por meio do Capacitor. O app permite gerenciar clientes e pets de uma pet shop com CRUD completo, utilizando SQLite para armazenamento local.
+O **PetShop** é um aplicativo híbrido que roda no navegador e em dispositivos móveis (Android/iOS) por meio do Capacitor. O app permite gerenciar clientes e pets de uma pet shop com CRUD completo, utilizando localStorage para armazenamento local.
 
 ### Funcionalidades
 
+- **Autenticação**: Cadastro e login de usuários com validação de senha forte
 - **Home**: Dashboard com contadores de clientes e pets, e acessos rápidos
 - **Clientes**: Cadastro, listagem, edição e exclusão de clientes
 - **Pets**: Cadastro, listagem, edição e exclusão de pets com vínculo ao tutor
+
+### Regras de Senha
+
+O cadastro exige senhas que atendam todos os seguintes critérios:
+
+- Pelo menos 8 caracteres
+- Pelo menos 1 letra maiúscula
+- Pelo menos 1 letra minúscula
+- Pelo menos 1 número
+- Pelo menos 1 caractere especial (!@#$%...)
 
 ### Estrutura do Projeto
 
@@ -29,12 +39,19 @@ O **PetShop** é um aplicativo híbrido que roda no navegador e em dispositivos 
 myApp/src/app/
 ├── models/                    # Interfaces TypeScript
 │   ├── cliente.model.ts       # Interface Cliente
-│   └── pet.model.ts           # Interface Pet
-├── services/                  # Serviços de banco de dados e lógica
-│   ├── database.service.ts    # Conexão e operações SQLite
+│   ├── pet.model.ts           # Interface Pet
+│   └── usuario.model.ts       # Interface Usuario
+├── services/                  # Serviços de lógica e armazenamento
+│   ├── storage.service.ts     # Wrapper do localStorage
+│   ├── auth.service.ts        # Autenticação (login/cadastro/logout)
 │   ├── cliente.service.ts     # CRUD de clientes
 │   └── pet.service.ts         # CRUD de pets
+├── guards/                    # Guards de rotas
+│   └── auth.guard.ts          # Proteção de rotas autenticadas
 ├── pages/                     # Páginas (componentes standalone)
+│   ├── auth/
+│   │   ├── login/             # Página de login
+│   │   └── cadastro/          # Página de cadastro
 │   ├── clientes/
 │   │   ├── cliente-list/      # Lista de clientes
 │   │   └── cliente-form/      # Formulário criar/editar
@@ -48,34 +65,16 @@ myApp/src/app/
 └── app.routes.ts              # Rotas principais
 ```
 
-### Banco de Dados
+### Armazenamento
 
-O app utiliza **SQLite** via `@capacitor-community/sqlite` para armazenamento local:
+O app utiliza **localStorage** para persistência de dados:
 
-```sql
--- Tabela de clientes
-CREATE TABLE clientes (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  nome TEXT NOT NULL,
-  telefone TEXT,
-  email TEXT,
-  endereco TEXT,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
--- Tabela de pets
-CREATE TABLE pets (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  nome TEXT NOT NULL,
-  especie TEXT,
-  raca TEXT,
-  idade INTEGER,
-  peso REAL,
-  cliente_id INTEGER,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE
-);
-```
+| Chave               | Descrição         |
+| ------------------- | ----------------- |
+| `petshop_clientes`  | Lista de clientes |
+| `petshop_pets`      | Lista de pets     |
+| `petshop_usuarios`  | Lista de usuários |
+| `petshop_session`   | Sessão do usuário |
 
 ## Pré-requisitos
 
@@ -135,12 +134,12 @@ npx cap run android
 
 O projeto segue o fluxo Git Flow para controle de versão:
 
-| Branch    | Uso                      |
-| --------- | ------------------------ |
-| `main`    | Produção estável         |
-| `develop` | Integração de features   |
+| Branch      | Uso                    |
+| ----------- | ---------------------- |
+| `main`      | Produção estável       |
+| `develop`   | Integração de features |
 | `feature/*` | Nova funcionalidade    |
-| `hotfix/*` | Correção urgente       |
+| `hotfix/*`  | Correção urgente       |
 
 ### Commits
 
