@@ -23,7 +23,6 @@
             [(ngModel)]="nome"
             name="nome"
             placeholder="Seu nome completo"
-            required
           ></ion-input>
         </ion-item>
 
@@ -32,17 +31,24 @@
           <ion-input
             [(ngModel)]="email"
             name="email"
-            type="email"
             placeholder="seu@email.com"
-            autocomplete="email"
             (ionBlur)="emailTouched = true"
-            required
           ></ion-input>
         </ion-item>
         <ion-text color="danger" class="error-text" *ngIf="emailTouched && email.length > 0 && !isEmailValid">
           <ion-icon name="alert-circle-outline"></ion-icon>
           Formato de email inválido
         </ion-text>
+
+        <ion-item>
+          <ion-label position="stacked">Senha *</ion-label>
+          <ion-input
+            [(ngModel)]="senha"
+            name="senha"
+            type="password"
+            placeholder="Mínimo 8 caracteres"
+          ></ion-input>
+        </ion-item>
       </ion-list>
 
       <div class="password-rules" *ngIf="senha.length > 0">
@@ -67,8 +73,6 @@
             name="confirmarSenha"
             type="password"
             placeholder="Repita a senha"
-            autocomplete="new-password"
-            required
           ></ion-input>
         </ion-item>
       </ion-list>

@@ -1,0 +1,12 @@
+{
+  "name": "petshop",
+  "version": "1.0.0",
+  "description": "PetShop - Gerenciamento de pet shop",
+  "scripts": {
+    "start": "cd myApp && npm start",
+    "build": "cd myApp && npm run build",
+    "server": "cd server && npm start",
+    "server:dev": "cd server && npm run dev",
+    "dev": "cd server && npm start & cd myApp && npm start"
+  }
+}

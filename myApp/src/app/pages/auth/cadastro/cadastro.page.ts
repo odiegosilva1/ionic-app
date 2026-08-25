@@ -43,6 +43,10 @@ export class CadastroPage {
     return EMAIL_REGEX.test(this.email);
   }
 
+  get isPasswordValid(): boolean {
+    return this.passwordStrength === 5;
+  }
+
   get passwordStrength(): number {
     return this.rules.filter((r) => r.test(this.senha)).length;
   }
@@ -69,8 +73,13 @@ export class CadastroPage {
   }
 
   async onRegister() {
-    if (!this.nome.trim() || !this.email.trim() || !this.senha.trim()) {
-      await this.showToast('Preencha todos os campos', 'warning');
+    if (!this.nome.trim()) {
+      await this.showToast('Preencha o nome', 'warning');
+      return;
+    }
+
+    if (!this.email.trim()) {
+      await this.showToast('Preencha o email', 'warning');
       return;
     }
 
@@ -79,13 +88,18 @@ export class CadastroPage {
       return;
     }
 
-    if (this.senha !== this.confirmarSenha) {
-      await this.showToast('As senhas não coincidem', 'warning');
+    if (!this.senha) {
+      await this.showToast('Preencha a senha', 'warning');
       return;
     }
 
-    if (this.passwordStrength < 5) {
-      await this.showToast('A senha não atende todos os requisitos de segurança', 'warning');
+    if (!this.isPasswordValid) {
+      await this.showToast('A senha deve atender todos os 5 requisitos de segurança', 'warning');
+      return;
+    }
+
+    if (this.senha !== this.confirmarSenha) {
+      await this.showToast('As senhas não coincidem', 'warning');
       return;
     }
 
