@@ -10,6 +10,8 @@ interface PasswordRule {
   test: (senha: string) => boolean;
 }
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 @Component({
   selector: 'app-cadastro',
   standalone: true,
@@ -22,6 +24,7 @@ export class CadastroPage {
   email = '';
   senha = '';
   confirmarSenha = '';
+  emailTouched = false;
 
   rules: PasswordRule[] = [
     { label: 'Pelo menos 8 caracteres', test: (s) => s.length >= 8 },
@@ -34,6 +37,10 @@ export class CadastroPage {
   private authService = inject(AuthService);
   private router = inject(Router);
   private toastController = inject(ToastController);
+
+  get isEmailValid(): boolean {
+    return EMAIL_REGEX.test(this.email);
+  }
 
   get passwordStrength(): number {
     return this.rules.filter((r) => r.test(this.senha)).length;
@@ -63,6 +70,11 @@ export class CadastroPage {
   async onRegister() {
     if (!this.nome.trim() || !this.email.trim() || !this.senha.trim()) {
       await this.showToast('Preencha todos os campos', 'warning');
+      return;
+    }
+
+    if (!this.isEmailValid) {
+      await this.showToast('Email inválido', 'warning');
       return;
     }
 

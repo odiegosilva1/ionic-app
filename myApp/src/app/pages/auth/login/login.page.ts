@@ -5,6 +5,8 @@ import { IonicModule, ToastController } from '@ionic/angular';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -15,14 +17,24 @@ import { AuthService } from '../../../services/auth.service';
 export class LoginPage {
   email = '';
   senha = '';
+  emailTouched = false;
 
   private authService = inject(AuthService);
   private router = inject(Router);
   private toastController = inject(ToastController);
 
+  get isEmailValid(): boolean {
+    return EMAIL_REGEX.test(this.email);
+  }
+
   async onLogin() {
     if (!this.email.trim() || !this.senha.trim()) {
       await this.showToast('Preencha todos os campos', 'warning');
+      return;
+    }
+
+    if (!this.isEmailValid) {
+      await this.showToast('Email inválido', 'warning');
       return;
     }
 

@@ -35,21 +35,14 @@
             type="email"
             placeholder="seu@email.com"
             autocomplete="email"
+            (ionBlur)="emailTouched = true"
             required
           ></ion-input>
         </ion-item>
-
-        <ion-item>
-          <ion-label position="stacked">Senha *</ion-label>
-          <ion-input
-            [(ngModel)]="senha"
-            name="senha"
-            type="password"
-            placeholder="Mínimo 8 caracteres"
-            autocomplete="new-password"
-            required
-          ></ion-input>
-        </ion-item>
+        <ion-text color="danger" class="error-text" *ngIf="emailTouched && email.length > 0 && !isEmailValid">
+          <ion-icon name="alert-circle-outline"></ion-icon>
+          Formato de email inválido
+        </ion-text>
       </ion-list>
 
       <div class="password-rules" *ngIf="senha.length > 0">
