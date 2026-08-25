@@ -18,6 +18,7 @@ export class LoginPage {
   email = '';
   senha = '';
   emailTouched = false;
+  showPassword = false;
 
   private authService = inject(AuthService);
   private router = inject(Router);
