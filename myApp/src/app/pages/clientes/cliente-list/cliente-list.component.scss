@@ -16,3 +16,53 @@ p {
   font-size: 14px;
   margin: 2px 0;
 }
+
+.meu-perfil {
+  padding: 16px 16px 0;
+
+  ion-card {
+    --background: var(--ion-color-primary);
+    cursor: pointer;
+
+    ion-card-subtitle {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    ion-card-title {
+      color: #fff;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    ion-card-content {
+      position: relative;
+      padding-top: 8px;
+
+      p {
+        color: rgba(255, 255, 255, 0.85);
+        margin: 2px 0;
+        font-size: 13px;
+      }
+
+      .ion-text-italic {
+        font-style: italic;
+        opacity: 0.7;
+      }
+    }
+
+    .perfil-action {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+
+      ion-icon {
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 20px;
+      }
+    }
+  }
+}

@@ -78,7 +78,7 @@
           required
         >
           <ion-select-option *ngFor="let cliente of clientes" [value]="cliente.id">
-            {{ cliente.nome }}
+            {{ cliente.id === meuPerfilId ? 'Eu (' + cliente.nome + ')' : cliente.nome }}
           </ion-select-option>
         </ion-select>
       </ion-item>
