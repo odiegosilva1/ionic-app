@@ -33,9 +33,12 @@
           <ion-input
             [(ngModel)]="senha"
             name="senha"
-            type="password"
+            [type]="showPassword ? 'text' : 'password'"
             placeholder="Sua senha"
           ></ion-input>
+          <ion-button slot="end" fill="clear" (click)="showPassword = !showPassword" class="eye-btn">
+            <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'" slot="icon-only"></ion-icon>
+          </ion-button>
         </ion-item>
       </ion-list>
 

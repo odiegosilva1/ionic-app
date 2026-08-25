@@ -26,6 +26,8 @@ export class CadastroPage {
   senha = '';
   confirmarSenha = '';
   emailTouched = false;
+  showPassword = false;
+  showConfirmPassword = false;
 
   rules: PasswordRule[] = [
     { label: 'Pelo menos 8 caracteres', test: (s) => s.length >= 8 },
