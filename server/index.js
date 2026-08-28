@@ -31,14 +31,49 @@ function loadDB() {
     if (fs.existsSync(DB_FILE)) {
       const db = JSON.parse(fs.readFileSync(DB_FILE, 'utf-8'));
       if (!Array.isArray(db.reset_tokens)) db.reset_tokens = [];
+      if (!Array.isArray(db.auditoria)) db.auditoria = [];
       return db;
     }
   } catch {}
-  return { usuarios: [], reset_tokens: [] };
+  return { usuarios: [], reset_tokens: [], auditoria: [] };
 }
 
 function saveDB(db) {
   fs.writeFileSync(DB_FILE, JSON.stringify(db, null, 2));
+}
+
+const MAX_AUDITORIA_ENTRIES = 1000;
+
+function registrarAuditoria(db, { acao, email, ip }) {
+  if (!Array.isArray(db.auditoria)) db.auditoria = [];
+  db.auditoria.push({
+    id: uuidv4(),
+    acao,
+    email: email ? String(email).toLowerCase() : null,
+    ip: ip || null,
+    created_at: new Date().toISOString(),
+  });
+  if (db.auditoria.length > MAX_AUDITORIA_ENTRIES) {
+    db.auditoria = db.auditoria.slice(-MAX_AUDITORIA_ENTRIES);
+  }
+}
+
+function getClientIp(req) {
+  const fwd = req.headers['x-forwarded-for'];
+  if (fwd) return String(fwd).split(',')[0].trim();
+  return req.ip || req.socket?.remoteAddress || null;
+}
+
+const AUDITORIA_TTL_DAYS = 180;
+
+function purgeExpiredData(db) {
+  const now = new Date();
+  db.reset_tokens = (db.reset_tokens || []).filter(
+    (t) => !t.used_at && new Date(t.expires_at) > now
+  );
+  db.auditoria = (db.auditoria || []).filter(
+    (a) => !a.created_at || new Date(a.created_at) > new Date(now.getTime() - AUDITORIA_TTL_DAYS * 86400000)
+  );
 }
 
 function hashToken(token) {
@@ -64,6 +99,7 @@ function createTransporter() {
 
 app.use(cors());
 app.use(express.json());
+app.set('trust proxy', 1);
 
 function authMiddleware(req, res, next) {
   const header = req.headers.authorization;
@@ -177,6 +213,7 @@ app.post('/api/auth/forgot-password', async (req, res) => {
     }
 
     const db = loadDB();
+    purgeExpiredData(db);
     const usuario = db.usuarios.find(
       (u) => u.email.toLowerCase() === email.toLowerCase()
     );
@@ -196,6 +233,7 @@ app.post('/api/auth/forgot-password', async (req, res) => {
         expires_at: expiresAt,
         used_at: null,
       });
+      registrarAuditoria(db, { acao: 'password_reset_request', email: usuario.email, ip: getClientIp(req) });
       saveDB(db);
 
       const resetUrl = `${process.env.APP_URL || 'http://localhost:4200'}/redefinir-senha?token=${token}`;
@@ -240,6 +278,7 @@ app.post('/api/auth/reset-password', async (req, res) => {
     }
 
     const db = loadDB();
+    purgeExpiredData(db);
     const tokenHash = hashToken(String(token));
     const registro = (db.reset_tokens || []).find((t) => t.id === tokenHash);
 
@@ -263,6 +302,7 @@ app.post('/api/auth/reset-password', async (req, res) => {
       if (t.used_at) return false;
       return new Date(t.expires_at) > new Date();
     });
+    registrarAuditoria(db, { acao: 'password_reset_completed', email: usuario.email, ip: getClientIp(req) });
     saveDB(db);
 
     res.json({ message: 'Senha redefinida com sucesso' });
