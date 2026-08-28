@@ -67,6 +67,30 @@ export class AuthService {
     }
   }
 
+  async forgotPassword(email: string): Promise<{ success: boolean; message: string }> {
+    try {
+      const res = await firstValueFrom(
+        this.http.post<AuthResponse>(`${this.apiUrl}/forgot-password`, { email })
+      );
+      return { success: true, message: res.message };
+    } catch (err: any) {
+      const msg = err?.error?.message || 'Erro ao solicitar redefinição de senha';
+      return { success: false, message: msg };
+    }
+  }
+
+  async resetPassword(token: string, novaSenha: string): Promise<{ success: boolean; message: string }> {
+    try {
+      const res = await firstValueFrom(
+        this.http.post<AuthResponse>(`${this.apiUrl}/reset-password`, { token, novaSenha })
+      );
+      return { success: true, message: res.message };
+    } catch (err: any) {
+      const msg = err?.error?.message || 'Erro ao redefinir senha';
+      return { success: false, message: msg };
+    }
+  }
+
   logout(): void {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_KEY);

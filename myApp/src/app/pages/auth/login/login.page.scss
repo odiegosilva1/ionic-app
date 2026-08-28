@@ -65,6 +65,21 @@ ion-label[position="stacked"] {
   height: 48px;
 }
 
+.forgot-link {
+  text-align: right;
+  margin-top: 8px;
+
+  a {
+    color: var(--ion-color-medium);
+    font-size: 14px;
+    text-decoration: none;
+
+    &:hover {
+      color: var(--ion-color-primary);
+    }
+  }
+}
+
 .register-link {
   text-align: center;
   margin-top: 24px;

@@ -1,0 +1,54 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button routerLink="/login">Voltar</ion-button>
+    </ion-buttons>
+    <ion-title>Recuperar Senha</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="esqueci-container">
+    <div class="logo-section">
+      <ion-icon name="key-outline" class="logo-icon"></ion-icon>
+      <h1>Recuperar Senha</h1>
+      <p>Informe seu email para receber um link de redefinição</p>
+    </div>
+
+    <ng-container *ngIf="!enviado; else enviadoMsg">
+      <form (ngSubmit)="onSubmit()">
+        <ion-list>
+          <ion-item>
+            <ion-label position="stacked">Email</ion-label>
+            <ion-input
+              [(ngModel)]="email"
+              name="email"
+              placeholder="seu@email.com"
+              (ionBlur)="emailTouched = true"
+            ></ion-input>
+          </ion-item>
+          <ion-text color="danger" class="error-text" *ngIf="emailTouched && email.length > 0 && !isEmailValid">
+            <ion-icon name="alert-circle-outline"></ion-icon>
+            Formato de email inválido
+          </ion-text>
+        </ion-list>
+
+        <ion-button expand="block" type="submit" class="submit-btn">
+          Enviar link de redefinição
+        </ion-button>
+      </form>
+    </ng-container>
+
+    <ng-template #enviadoMsg>
+      <div class="sucesso-box">
+        <ion-icon name="checkmark-circle" class="sucesso-icon"></ion-icon>
+        <h2>Email enviado!</h2>
+        <p>
+          Se o email informado estiver cadastrado, você receberá um link para redefinir sua senha.
+          Verifique sua caixa de entrada (e o spam).
+        </p>
+        <ion-button expand="block" routerLink="/login" class="submit-btn">Voltar para o login</ion-button>
+      </div>
+    </ng-template>
+  </div>
+</ion-content>
