@@ -190,6 +190,21 @@ A API sobe em:
 - `https://localhost:3000` (HTTPS)
 - `http://localhost:3001` (HTTP fallback para dev)
 
+#### Variáveis de ambiente do backend
+
+| Variável        | Descrição                                                    | Padrão                 |
+| --------------- | ------------------------------------------------------------ | ---------------------- |
+| `PORT`          | Porta da API (HTTPS)                                         | `3000`                 |
+| `JWT_SECRET`    | Chave secreta para assinatura dos tokens JWT                 | `valor dev`            |
+| `SMTP_HOST`     | Servidor SMTP para envio de email de recuperação             | *(vazio = modo dev)*   |
+| `SMTP_PORT`     | Porta SMTP (587 para TLS, 465 para SSL)                      | `587`                  |
+| `SMTP_USER`     | Usuário do SMTP                                              | —                      |
+| `SMTP_PASS`     | Senha/App password do SMTP                                   | —                      |
+| `SMTP_FROM`     | E-mail remetente do email de recuperação                     | `SMTP_USER`            |
+| `APP_URL`       | URL pública do frontend (base do link de recuperação)        | `http://localhost:4200`|
+
+> Sem `SMTP_HOST` configurado, o link de recuperação é exibido no console do servidor (modo desenvolvimento).
+
 ### 3. Iniciar frontend (Angular)
 
 ```bash
@@ -231,6 +246,26 @@ npx cap open android
 | `develop`   | Integração de features |
 | `feature/*` | Nova funcionalidade    |
 | `hotfix/*`  | Correção urgente       |
+
+### Fluxo de trabalho (1 issue = 1 branch = 1 PR)
+
+Cada implementação segue o padrão: **uma issue no GitHub → uma branch de feature → um Pull Request para `develop`**.
+
+1. Criar a issue descrevendo a implementação e seus critérios de aceite.
+2. Criar a branch a partir de `develop`:
+   ```bash
+   git checkout develop && git pull
+   git checkout -b feature/nome-da-feature
+   ```
+3. Implementar e commitar com a convenção Angular.
+4. Enviar a branch e abrir o Pull Request:
+   ```bash
+   git push -u origin feature/nome-da-feature
+   gh pr create --base develop --head feature/nome-da-feature
+   ```
+5. Após review e merge em `develop`, deletar a branch (local e remota).
+
+> Manter `develop` sempre sincronizada com `main` (fast-forward) para que as features saiam de um tronco atualizado.
 
 ### Commits
 
