@@ -23,7 +23,7 @@ export class AuthService {
   private clienteService = inject(ClienteService);
   private apiUrl = `${environment.apiUrl}/api/auth`;
 
-  async register(data: { nome: string; email: string; senha: string }): Promise<{ success: boolean; message: string }> {
+  async register(data: { nome: string; email: string; senha: string; aceiteTermos?: boolean }): Promise<{ success: boolean; message: string }> {
     try {
       const res = await firstValueFrom(
         this.http.post<AuthResponse>(`${this.apiUrl}/register`, data)

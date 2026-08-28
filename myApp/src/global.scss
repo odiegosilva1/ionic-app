@@ -50,3 +50,30 @@ ion-card {
   border: 1px solid rgba(142, 111, 216, 0.14);
   box-shadow: none;
 }
+
+/* Checkbox de aceite da Política de Privacidade (LGPD) no cadastro */
+.termo-item {
+  --min-height: 0;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --inner-padding-end: 0;
+  align-items: flex-start;
+  margin-top: 16px;
+
+  ion-checkbox {
+    margin-top: 2px;
+  }
+}
+
+.termo-label {
+  font-size: 13px;
+  line-height: 1.4;
+  white-space: normal;
+  padding-top: 0;
+
+  a {
+    color: var(--ion-color-primary);
+    font-weight: 600;
+    text-decoration: underline;
+  }
+}

@@ -47,10 +47,16 @@ function authMiddleware(req, res, next) {
 
 app.post('/api/auth/register', async (req, res) => {
   try {
-    const { nome, email, senha } = req.body;
+    const { nome, email, senha, aceiteTermos } = req.body;
 
     if (!nome || !email || !senha) {
       return res.status(400).json({ message: 'Preencha todos os campos' });
+    }
+
+    if (aceiteTermos !== true) {
+      return res.status(400).json({
+        message: 'É necessário aceitar a Política de Privacidade para se cadastrar (LGPD)',
+      });
     }
 
     const db = loadDB();
@@ -65,6 +71,8 @@ app.post('/api/auth/register', async (req, res) => {
       nome,
       email: email.toLowerCase(),
       senha: hashedSenha,
+      aceite_termos: true,
+      aceite_termos_at: new Date().toISOString(),
       created_at: new Date().toISOString(),
     };
 
