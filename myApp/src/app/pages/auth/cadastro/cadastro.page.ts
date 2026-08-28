@@ -1,9 +1,10 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule, ToastController } from '@ionic/angular';
+import { IonicModule, ToastController, ModalController } from '@ionic/angular';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
+import { PrivacidadePage } from '../../privacidade/privacidade.page';
 import { sanitizeInput } from '../../../utils/sanitize';
 
 interface PasswordRule {
@@ -28,6 +29,8 @@ export class CadastroPage {
   emailTouched = false;
   showPassword = false;
   showConfirmPassword = false;
+  aceiteTermos = false;
+  aceiteTouched = false;
 
   rules: PasswordRule[] = [
     { label: 'Pelo menos 8 caracteres', test: (s) => s.length >= 8 },
@@ -40,6 +43,7 @@ export class CadastroPage {
   private authService = inject(AuthService);
   private router = inject(Router);
   private toastController = inject(ToastController);
+  private modalController = inject(ModalController);
 
   get isEmailValid(): boolean {
     return EMAIL_REGEX.test(this.email);
@@ -74,6 +78,14 @@ export class CadastroPage {
     return rule.test(this.senha);
   }
 
+  async openPrivacidade(event: Event): Promise<void> {
+    event.preventDefault();
+    const modal = await this.modalController.create({
+      component: PrivacidadePage,
+    });
+    await modal.present();
+  }
+
   async onRegister() {
     if (!this.nome.trim()) {
       await this.showToast('Preencha o nome', 'warning');
@@ -105,10 +117,17 @@ export class CadastroPage {
       return;
     }
 
+    if (!this.aceiteTermos) {
+      this.aceiteTouched = true;
+      await this.showToast('Aceite a Política de Privacidade para continuar (LGPD)', 'warning');
+      return;
+    }
+
     const result = await this.authService.register({
       nome: sanitizeInput(this.nome.trim()),
       email: this.email.trim().toLowerCase(),
       senha: this.senha,
+      aceiteTermos: this.aceiteTermos,
     });
 
     if (result.success) {

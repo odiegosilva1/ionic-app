@@ -83,6 +83,24 @@
         </ion-item>
       </ion-list>
 
+      <ion-item class="termo-item" lines="none">
+        <ion-checkbox
+          slot="start"
+          [(ngModel)]="aceiteTermos"
+          name="aceiteTermos"
+          (ionChange)="aceiteTouched = true"
+        ></ion-checkbox>
+        <ion-label class="termo-label">
+          Li e aceito a
+          <a href="#" (click)="openPrivacidade($event)">Política de Privacidade</a>
+          e o tratamento dos meus dados pessoais (LGPD) *
+        </ion-label>
+      </ion-item>
+      <ion-text color="danger" class="error-text" *ngIf="aceiteTouched && !aceiteTermos">
+        <ion-icon name="alert-circle-outline"></ion-icon>
+        É necessário aceitar os termos para continuar
+      </ion-text>
+
       <ion-button expand="block" type="submit" class="register-btn">
         Cadastrar
       </ion-button>
