@@ -29,6 +29,15 @@ O **PetShop** é um aplicativo híbrido que roda no navegador e em dispositivos 
 - Interceptor HTTP que adiciona Bearer token automaticamente
 - AuthGuard protege todas as rotas do app
 - Logout com limpeza de sessão
+- **Recuperação de senha** via email (token expirável de 60 min, uso único, armazenado como hash)
+- Páginas `esqueci-senha` e `redefinir-senha` com indicador de força de senha
+
+### LGPD (Lei Geral de Proteção de Dados)
+- **Consentimento obrigatório** no cadastro (checkbox de aceite da Política de Privacidade)
+- **Página de Política de Privacidade** com aviso completo (dados coletados, finalidade, base legal, segurança, direitos do titular, retenção e contato)
+- **Princípio da minimização**: coleta apenas de dados mínimos (nome, email, senha)
+- **Log de auditoria** das ações de recuperação e redefinição de senha (com IP e data/hora)
+- **Retenção e expiração**: tokens de recuperação com validade curta e purga; auditoria com janela de retenção
 
 ### Home (Dashboard)
 - Mensagem de boas-vindas com o nome do usuário logado
@@ -105,21 +114,25 @@ myApp/src/app/
 
 ```
 server/
-├── index.js                   # Express + JWT + bcrypt
-├── package.json               # Dependências do servidor
+├── index.js                   # Express + JWT + bcrypt + recuperação de senha + auditoria LGPD
+├── package.json               # Dependências do servidor (inclui nodemailer)
 ├── ssl/                       # Certificados auto-assinados (HTTPS)
 │   ├── cert.pem
 │   └── key.pem
 └── db.json                    # Persistência em arquivo (gitignored)
 ```
 
+> Envio de email de recuperação usa **SMTP** via variáveis de ambiente (`SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM`). Sem SMTP configurado, o link é exibido no console (modo dev).
+
 #### Endpoints da API
 
 | Método | Rota | Descrição | Auth |
 |--------|------|-----------|------|
-| `POST` | `/api/auth/register` | Cadastro de usuário | Não |
+| `POST` | `/api/auth/register` | Cadastro de usuário (exige aceite LGPD) | Não |
 | `POST` | `/api/auth/login` | Login (retorna JWT) | Não |
 | `GET` | `/api/auth/me` | Dados do usuário logado | JWT |
+| `POST` | `/api/auth/forgot-password` | Solicita recuperação de senha (envia token por email) | Não |
+| `POST` | `/api/auth/reset-password` | Redefine a senha com o token recebido | Não |
 | `GET` | `/api/health` | Health check | Não |
 
 #### Portas
@@ -128,6 +141,15 @@ server/
 |-------|-----------|-----|
 | `3000` | HTTPS | Mobile / produção (Capacitor) |
 | `3001` | HTTP | Desenvolvimento (ng serve) |
+
+### Fluxo de Recuperação de Senha
+
+1. Usuário acessa "Esqueci a senha?" e informa o email
+2. Backend gera token de recuperação (válido por 60 min), armazena como hash (SHA-256) e registra auditoria `password_reset_request`
+3. Backend envia email com link para `/redefinir-senha?token=...` (em dev, o link é exibido no console)
+4. Usuário define nova senha (validação das 5 regras de senha forte)
+5. Backend valida o token (expiração e uso único), atualiza a senha com bcrypt e registra auditoria `password_reset_completed`
+6. Link de recuperação usa **resposta genérica** para não revelar se um email está cadastrado
 
 ### Fluxo de Cadastro → Login → Tutor
 
@@ -232,6 +254,7 @@ refactor(scope): descrição
 | Express                       | 4.21.0  |
 | jsonwebtoken                  | 9.0.2   |
 | bcryptjs                      | 2.4.3   |
+| nodemailer                    | 9.0.6   |
 
 ## Scripts disponíveis
 
