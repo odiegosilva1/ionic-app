@@ -77,6 +77,26 @@ Todas as regras são obrigatórias e validadas em tempo real com indicador visua
 | 1 número | `1` |
 | 1 caractere especial | `@#!$%` |
 
+## Roadmap / Planos futuros
+
+Funcionalidades planejadas (ainda não implementadas) e seus critérios de aceite:
+
+### Aba/Perfil de detalhes do Pet
+Reaproveitando o estilo do perfil centralizado já presente na Home, criar uma visão de **perfil/detalhes do pet** com navegação dedicada:
+
+- Tela de detalhes do pet com dados completos em formato de perfil (foto/avatar, espécie, raça, idade, peso)
+- Acesso via toque no card do pet nas listagens (Pets e Ranking de tutores)
+- Navegação de volta ao destino de origem (lista de Pets ou Ranking)
+- Reaproveitar os ícones de informação já centralizados (`app.icons.ts`)
+- Manter o design system (paleta lilás, tokens e utilitários) já padronizado
+
+**Critérios de aceite:**
+1. Tocar em um pet abre a tela de perfil com todos os dados visíveis
+2. A tela oferece voltar para a origem sem perder o contexto
+3. O layout segue o padrão visual das demais telas (design system)
+
+> Status: **pendente** — fora do escopo da rodada atual de padronização de UI/usabilidade.
+
 ## Arquitetura
 
 ### Frontend (`myApp/`)
