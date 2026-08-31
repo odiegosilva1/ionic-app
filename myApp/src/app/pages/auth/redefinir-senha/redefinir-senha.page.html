@@ -1,12 +1,15 @@
 <ion-header>
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button routerLink="/login">Voltar</ion-button>
+    </ion-buttons>
     <ion-title>Redefinir Senha</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-  <div class="redefinir-container">
-    <div class="logo-section">
+  <div class="auth-container">
+    <div class="auth-logo-section">
       <ion-icon name="lock-closed-outline" class="logo-icon"></ion-icon>
       <h1>Nova Senha</h1>
       <p>Defina uma nova senha para sua conta</p>
@@ -58,8 +61,9 @@
           </ion-item>
         </ion-list>
 
-        <ion-button expand="block" type="submit" class="submit-btn">
-          Redefinir senha
+        <ion-button expand="block" type="submit" class="submit-btn auth-submit-btn" [disabled]="loading">
+          <ion-spinner name="crescent" *ngIf="loading"></ion-spinner>
+          <span *ngIf="!loading">Redefinir senha</span>
         </ion-button>
       </form>
     </ng-container>
@@ -69,7 +73,7 @@
         <ion-icon name="checkmark-circle" class="sucesso-icon"></ion-icon>
         <h2>Senha redefinida!</h2>
         <p>Sua senha foi alterada com sucesso. Faça login com a nova senha.</p>
-        <ion-button expand="block" routerLink="/login" class="submit-btn">Ir para o login</ion-button>
+        <ion-button expand="block" routerLink="/login" class="submit-btn primary-btn">Ir para o login</ion-button>
       </div>
     </ng-template>
   </div>

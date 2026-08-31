@@ -27,10 +27,11 @@ O **PetShop** é um aplicativo híbrido que roda no navegador e em dispositivos 
 - Hash SHA-256 + bcrypt nas senhas
 - Sanitização de inputs (prevenção XSS)
 - Interceptor HTTP que adiciona Bearer token automaticamente
-- AuthGuard protege todas as rotas do app
-- Logout com limpeza de sessão
+- AuthGuard protege todas as rotas do app (inclusive rotas diretas de clientes/pets/forms)
+- Logout com confirmação e limpeza de sessão
 - **Recuperação de senha** via email (token expirável de 60 min, uso único, armazenado como hash)
 - Páginas `esqueci-senha` e `redefinir-senha` com indicador de força de senha
+- Feedback de carregamento (loading/desabilitado) em todos os botões de submit
 
 ### LGPD (Lei Geral de Proteção de Dados)
 - **Consentimento obrigatório** no cadastro (checkbox de aceite da Política de Privacidade)
@@ -42,7 +43,8 @@ O **PetShop** é um aplicativo híbrido que roda no navegador e em dispositivos 
 ### Home (Dashboard)
 - Mensagem de boas-vindas com o nome do usuário logado
 - Contadores de clientes e pets cadastrados
-- Acesso rápido para cadastrar cliente ou pet
+- Acesso rápido para cadastrar cliente ou pet (leva direto ao formulário)
+- Logout no cabeçalho com confirmação
 
 ### Clientes (Tutores)
 - **Perfil do tutor logado** exibido em destaque (card azul) no topo da lista
@@ -88,6 +90,7 @@ myApp/src/app/
 ├── services/                  # Serviços
 │   ├── storage.service.ts     # Wrapper do localStorage
 │   ├── auth.service.ts        # Login/cadastro/logout + JWT + auto-criação de cliente
+│   ├── toast.service.ts       # Toast padronizados em todo o app
 │   ├── cliente.service.ts     # CRUD de clientes
 │   └── pet.service.ts         # CRUD de pets
 ├── guards/
@@ -95,20 +98,35 @@ myApp/src/app/
 ├── interceptors/
 │   └── jwt.interceptor.ts     # Adiciona Bearer token às requests
 ├── utils/
-│   └── sanitize.ts            # Sanitização de inputs
+│   ├── sanitize.ts            # Sanitização de inputs
+│   ├── email.ts               # Regex de email compartilhado
+│   └── password.ts            # Regras e força de senha compartilhadas
 ├── pages/
 │   ├── auth/
 │   │   ├── login/             # Login com toggle senha + validação email
-│   │   └── cadastro/          # Cadastro com indicador de força
+│   │   ├── cadastro/          # Cadastro com indicador de força
+│   │   ├── esqueci-senha/     # Recuperação de senha
+│   │   └── redefinir-senha/   # Nova senha com token
+│   ├── privacidade/           # Política de privacidade (modal LGPD)
 │   ├── clientes/
 │   │   ├── cliente-list/      # Lista com perfil do tutor em destaque
 │   │   └── cliente-form/      # Formulário criar/editar
 │   └── pets/
-│       ├── pet-list/          # Lista com tutor
+│       ├── pet-list/          # Lista com tutor e ícones por espécie
 │       └── pet-form/          # Formulário com tutor pré-selecionado
-├── tabs/                      # Navegação por abas (Home, Clientes, Pets, Sair)
+├── tabs/                      # Navegação por abas (Home, Clientes, Pets)
 └── tab1/                      # Dashboard com boas-vindas
 ```
+
+### Design System e Padronização Visual
+
+O visual do app utiliza uma paleta lilás e um design system centralizado para garantir consistência entre telas, com fontes legíveis e layout responsivo:
+
+- **Tokens de design** em `src/theme/variables.scss` (`--radius-*`, `--button-height`, `--space-*`, `--card-border-color`)
+- **Utilitários compartilhados** em `src/theme/utilities.scss` (formulários de auth, indicador de força de senha, listas CRUD, botões primários)
+- **Cores tokenizadas** (sem valores hex/rgba hardcoded no layout; contraste via variáveis `--ion-color-*-contrast`)
+- **Feedback de interação** consistente (loading em botões, bordas arredondadas uniformes, toasts centralizados)
+- Ícones das listas e abas centralizados em `src/app/app.icons.ts`
 
 ### Backend (`server/`)
 
@@ -229,6 +247,17 @@ npm run build
 npx cap sync android
 npx cap open android
 ```
+
+Para gerar o APK de debug diretamente via Gradle:
+
+```bash
+cd myApp/android
+./gradlew assembleDebug
+```
+
+O APK final fica em `android/app/build/outputs/apk/debug/app-debug.apk`.
+
+> **Atenção (dispositivo físico):** no celular, `localhost:3001` aponta para o próprio aparelho, não para o seu PC. Para o cadastro/login funcionarem no dispositivo físico, o backend precisa rodar na sua máquina e o `apiUrl` em `myApp/src/environments/environment.ts` deve apontar para o IP local do PC na rede (ex.: `http://192.168.x.x:3001`), além de habilitar `cleartext` em `capacitor.config.ts`.
 
 ### Atalhos da raiz
 

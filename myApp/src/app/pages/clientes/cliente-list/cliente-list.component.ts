@@ -1,11 +1,12 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule, AlertController, ToastController } from '@ionic/angular';
+import { IonicModule, AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Cliente } from '../../../models/cliente.model';
 import { ClienteService } from '../../../services/cliente.service';
 import { AuthService } from '../../../services/auth.service';
+import { ToastService } from '../../../services/toast.service';
 
 @Component({
   selector: 'app-cliente-list',
@@ -23,7 +24,7 @@ export class ClienteListComponent implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
   private alertController = inject(AlertController);
-  private toastController = inject(ToastController);
+  private toast = inject(ToastService);
 
   async ngOnInit() {
     await this.loadClientes();
@@ -43,7 +44,7 @@ export class ClienteListComponent implements OnInit {
       }
     } catch (error) {
       console.error('Erro ao carregar clientes:', error);
-      await this.showToast('Erro ao carregar clientes', 'danger');
+      await this.toast.error('Erro ao carregar clientes');
     }
   }
 
@@ -89,11 +90,11 @@ export class ClienteListComponent implements OnInit {
           handler: async () => {
             try {
               await this.clienteService.delete(cliente.id!);
-              await this.showToast('Cliente excluido com sucesso', 'success');
+              await this.toast.success('Cliente excluido com sucesso');
               await this.loadClientes();
             } catch (error) {
               console.error('Erro ao excluir cliente:', error);
-              await this.showToast('Erro ao excluir cliente', 'danger');
+              await this.toast.error('Erro ao excluir cliente');
             }
           },
         },
@@ -102,14 +103,5 @@ export class ClienteListComponent implements OnInit {
 
     await alert.present();
   }
-
-  private async showToast(message: string, color: string) {
-    const toast = await this.toastController.create({
-      message,
-      duration: 2000,
-      color,
-      position: 'bottom',
-    });
-    await toast.present();
-  }
 }
+

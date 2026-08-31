@@ -1,20 +1,25 @@
-ion-item {
-  --min-height: 70px;
+.pet-avatar {
+  width: 48px;
+  height: 48px;
 }
 
-ion-icon[name="paw-outline"] {
+.pet-avatar img {
+  object-fit: cover;
+}
+
+.pet-avatar-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--ion-color-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pet-avatar-icon ion-icon {
+  font-size: 26px;
   color: var(--ion-color-secondary);
-}
-
-h2 {
-  font-weight: 600;
-  margin-bottom: 4px;
-}
-
-p {
-  color: var(--ion-color-medium);
-  font-size: 14px;
-  margin: 2px 0;
 }
 
 .tutor {

@@ -9,6 +9,9 @@
  * https://ionicframework.com/docs/layout/global-stylesheets
  */
 
+/* Utilitários e tokens visuais compartilhados */
+@use "./theme/utilities.scss";
+
 /* Core CSS required for Ionic components to work properly */
 @import "@ionic/angular/css/core.css";
 
@@ -41,14 +44,37 @@ ion-item ion-icon[slot='start'] {
   color: var(--ion-color-primary);
 }
 
+/* Previne rolagem lateral (layout 100% responsivo) */
+html,
+body,
+ion-app {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+ion-content {
+  overflow-x: hidden;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+*::-webkit-scrollbar {
+  width: 0;
+}
+
 ion-fab-button {
   --background: var(--ion-color-primary);
 }
 
 /* Contorno lilás suave nos cards sobre o fundo branco */
 ion-card {
-  border: 1px solid rgba(142, 111, 216, 0.14);
+  border: 1px solid var(--card-border-color, rgba(142, 111, 216, 0.14));
   box-shadow: none;
+  border-radius: var(--radius-card);
 }
 
 /* Checkbox de aceite da Política de Privacidade (LGPD) no cadastro */

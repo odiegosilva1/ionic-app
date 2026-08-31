@@ -1,20 +1,34 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-button (click)="onCancel()">Cancelar</ion-button>
+      <ion-button (click)="onCancel()" aria-label="Fechar">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
     </ion-buttons>
-    <ion-title>{{ isEditing ? 'Editar Pet' : 'Novo Pet' }}</ion-title>
+    <ion-title>{{ isEditing ? 'Editar Pet' : '' }}</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="onSubmit()" strong>Salvar</ion-button>
+      <ion-button (click)="onSubmit()" strong [disabled]="loading">Salvar</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="ion-padding">
   <form #form="ngForm" (ngSubmit)="onSubmit()">
+    <div class="pet-photo" (click)="selectFoto()" role="button" tabindex="0" aria-label="Alterar foto do pet">
+      <ion-avatar class="pet-avatar">
+        <img *ngIf="fotoPreview" [src]="fotoPreview" alt="Foto do pet" />
+        <div *ngIf="!fotoPreview" class="avatar-placeholder">
+          <ion-icon name="camera"></ion-icon>
+        </div>
+      </ion-avatar>
+      <ion-text class="photo-hint">
+        <small>{{ fotoPreview ? 'Toque para trocar/remover a foto' : 'Toque para adicionar a foto do pet' }}</small>
+      </ion-text>
+    </div>
+
     <ion-list>
       <ion-item>
-        <ion-label position="stacked">Nome *</ion-label>
+        <ion-label position="stacked">Nome</ion-label>
         <ion-input
           [(ngModel)]="pet.nome"
           name="nome"
@@ -24,7 +38,7 @@
       </ion-item>
 
       <ion-item>
-        <ion-label position="stacked">Especie *</ion-label>
+        <ion-label position="stacked">Especie</ion-label>
         <ion-select
           [(ngModel)]="pet.especie"
           name="especie"
@@ -69,7 +83,7 @@
       </ion-item>
 
       <ion-item>
-        <ion-label position="stacked">Tutor *</ion-label>
+        <ion-label position="stacked">Tutor</ion-label>
         <ion-select
           [(ngModel)]="pet.cliente_id"
           name="cliente_id"

@@ -1,14 +1,18 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule, ToastController } from '@ionic/angular';
+import { IonicModule } from '@ionic/angular';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
-
-interface PasswordRule {
-  label: string;
-  test: (senha: string) => boolean;
-}
+import { ToastService } from '../../../services/toast.service';
+import {
+  getPasswordStrength,
+  getStrengthColor,
+  getStrengthLabel,
+  PASSWORD_RULES,
+  PasswordRule,
+  ruleMet,
+} from '../../../utils/password';
 
 @Component({
   selector: 'app-redefinir-senha',
@@ -24,19 +28,14 @@ export class RedefinirSenhaPage {
   showPassword = false;
   showConfirmPassword = false;
   concluido = false;
+  loading = false;
 
-  rules: PasswordRule[] = [
-    { label: 'Pelo menos 8 caracteres', test: (s) => s.length >= 8 },
-    { label: 'Uma letra maiúscula', test: (s) => /[A-Z]/.test(s) },
-    { label: 'Uma letra minúscula', test: (s) => /[a-z]/.test(s) },
-    { label: 'Um número', test: (s) => /[0-9]/.test(s) },
-    { label: 'Um caractere especial (!@#$%...)', test: (s) => /[^A-Za-z0-9]/.test(s) },
-  ];
+  rules: PasswordRule[] = PASSWORD_RULES;
 
   private authService = inject(AuthService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
-  private toastController = inject(ToastController);
+  private toast = inject(ToastService);
 
   constructor() {
     this.route.queryParamMap.subscribe((params) => {
@@ -49,67 +48,54 @@ export class RedefinirSenhaPage {
   }
 
   get passwordStrength(): number {
-    return this.rules.filter((r) => r.test(this.senha)).length;
+    return getPasswordStrength(this.senha);
   }
 
   get strengthColor(): string {
-    const n = this.passwordStrength;
-    if (n <= 2) return 'danger';
-    if (n <= 3) return 'warning';
-    if (n <= 4) return 'medium';
-    return 'success';
+    return getStrengthColor(this.passwordStrength);
   }
 
   get strengthLabel(): string {
-    const n = this.passwordStrength;
-    if (n === 0) return '';
-    if (n <= 2) return 'Fraca';
-    if (n <= 3) return 'Razoável';
-    if (n <= 4) return 'Boa';
-    return 'Forte';
+    return getStrengthLabel(this.passwordStrength);
   }
 
   ruleMet(rule: PasswordRule): boolean {
-    return rule.test(this.senha);
+    return ruleMet(rule, this.senha);
   }
 
   async onSubmit() {
+    if (this.loading) {
+      return;
+    }
+
     if (!this.token) {
-      await this.showToast('Link inválido ou expirado', 'danger');
+      await this.toast.error('Link inválido ou expirado');
       return;
     }
 
     if (!this.senha) {
-      await this.showToast('Preencha a nova senha', 'warning');
+      await this.toast.warning('Preencha a nova senha');
       return;
     }
 
     if (!this.isPasswordValid) {
-      await this.showToast('A senha deve atender todos os 5 requisitos de segurança', 'warning');
+      await this.toast.warning('A senha deve atender todos os 5 requisitos de segurança');
       return;
     }
 
     if (this.senha !== this.confirmarSenha) {
-      await this.showToast('As senhas não coincidem', 'warning');
+      await this.toast.warning('As senhas não coincidem');
       return;
     }
 
+    this.loading = true;
     const result = await this.authService.resetPassword(this.token, this.senha);
+    this.loading = false;
 
     if (result.success) {
       this.concluido = true;
     } else {
-      await this.showToast(result.message, 'danger');
+      await this.toast.error(result.message);
     }
-  }
-
-  private async showToast(message: string, color: string) {
-    const toast = await this.toastController.create({
-      message,
-      duration: 2000,
-      color,
-      position: 'bottom',
-    });
-    await toast.present();
   }
 }

@@ -8,8 +8,8 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <div class="esqueci-container">
-    <div class="logo-section">
+  <div class="auth-container">
+    <div class="auth-logo-section">
       <ion-icon name="key-outline" class="logo-icon"></ion-icon>
       <h1>Recuperar Senha</h1>
       <p>Informe seu email para receber um link de redefinição</p>
@@ -33,8 +33,9 @@
           </ion-text>
         </ion-list>
 
-        <ion-button expand="block" type="submit" class="submit-btn">
-          Enviar link de redefinição
+        <ion-button expand="block" type="submit" class="submit-btn auth-submit-btn" [disabled]="loading">
+          <ion-spinner name="crescent" *ngIf="loading"></ion-spinner>
+          <span *ngIf="!loading">Enviar link de redefinição</span>
         </ion-button>
       </form>
     </ng-container>
@@ -47,7 +48,7 @@
           Se o email informado estiver cadastrado, você receberá um link para redefinir sua senha.
           Verifique sua caixa de entrada (e o spam).
         </p>
-        <ion-button expand="block" routerLink="/login" class="submit-btn">Voltar para o login</ion-button>
+        <ion-button expand="block" routerLink="/login" class="submit-btn primary-btn">Voltar para o login</ion-button>
       </div>
     </ng-template>
   </div>

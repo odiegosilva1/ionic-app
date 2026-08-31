@@ -6,6 +6,8 @@ export interface Pet {
   idade: number;
   peso: number;
   cliente_id: number;
+  foto?: string;
+  curtidas?: string[];
   created_at?: string;
 }
 

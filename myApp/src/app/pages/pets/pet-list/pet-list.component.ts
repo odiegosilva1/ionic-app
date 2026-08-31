@@ -1,10 +1,11 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule, AlertController, ToastController } from '@ionic/angular';
+import { IonicModule, AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { PetComTutor } from '../../../models/pet.model';
 import { PetService } from '../../../services/pet.service';
+import { ToastService } from '../../../services/toast.service';
 
 @Component({
   selector: 'app-pet-list',
@@ -20,7 +21,7 @@ export class PetListComponent implements OnInit {
   private petService = inject(PetService);
   private router = inject(Router);
   private alertController = inject(AlertController);
-  private toastController = inject(ToastController);
+  private toast = inject(ToastService);
 
   async ngOnInit() {
     await this.loadPets();
@@ -31,7 +32,7 @@ export class PetListComponent implements OnInit {
       this.pets = await this.petService.getAll();
     } catch (error) {
       console.error('Erro ao carregar pets:', error);
-      await this.showToast('Erro ao carregar pets', 'danger');
+      await this.toast.error('Erro ao carregar pets');
     }
   }
 
@@ -71,11 +72,11 @@ export class PetListComponent implements OnInit {
           handler: async () => {
             try {
               await this.petService.delete(pet.id!);
-              await this.showToast('Pet excluido com sucesso', 'success');
+              await this.toast.success('Pet excluido com sucesso');
               await this.loadPets();
             } catch (error) {
               console.error('Erro ao excluir pet:', error);
-              await this.showToast('Erro ao excluir pet', 'danger');
+              await this.toast.error('Erro ao excluir pet');
             }
           },
         },
@@ -96,14 +97,5 @@ export class PetListComponent implements OnInit {
     };
     return icons[especie] || 'help-circle-outline';
   }
-
-  private async showToast(message: string, color: string) {
-    const toast = await this.toastController.create({
-      message,
-      duration: 2000,
-      color,
-      position: 'bottom',
-    });
-    await toast.present();
-  }
 }
+
