@@ -58,6 +58,24 @@ export class PetService {
     );
   }
 
+  async toggleCurtida(id: number, usuarioId: string): Promise<boolean> {
+    const pets = this.storage.read<Pet>(STORAGE_KEYS.pets);
+    const pet = pets.find((p) => p.id === id);
+    if (!pet) return false;
+
+    const curtidas = pet.curtidas ?? [];
+    const jaCurtiu = curtidas.includes(usuarioId);
+    const novasCurtidas = jaCurtiu
+      ? curtidas.filter((u) => u !== usuarioId)
+      : [...curtidas, usuarioId];
+
+    const atualizados = pets.map((p) =>
+      p.id === id ? { ...p, curtidas: novasCurtidas } : p
+    );
+    this.storage.write(STORAGE_KEYS.pets, atualizados);
+    return !jaCurtiu;
+  }
+
   async search(termo: string): Promise<PetComTutor[]> {
     const pets = await this.withTutorNome();
     const t = termo.trim().toLowerCase();

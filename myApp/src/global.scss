@@ -44,6 +44,28 @@ ion-item ion-icon[slot='start'] {
   color: var(--ion-color-primary);
 }
 
+/* Previne rolagem lateral (layout 100% responsivo) */
+html,
+body,
+ion-app {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+ion-content {
+  overflow-x: hidden;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+*::-webkit-scrollbar {
+  width: 0;
+}
+
 ion-fab-button {
   --background: var(--ion-color-primary);
 }

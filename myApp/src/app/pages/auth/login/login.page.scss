@@ -59,3 +59,15 @@ ion-label[position="stacked"] {
     text-decoration: none;
   }
 }
+
+.footer-brand {
+  text-align: center;
+  margin-top: var(--space-lg);
+  color: var(--ion-color-medium);
+  font-size: 12px;
+
+  span {
+    display: block;
+    margin-bottom: 2px;
+  }
+}
