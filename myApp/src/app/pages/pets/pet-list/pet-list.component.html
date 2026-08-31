@@ -20,7 +20,12 @@
   <ion-list class="crud-list" *ngIf="pets.length > 0">
     <ion-item-sliding *ngFor="let pet of pets">
       <ion-item (click)="goToForm(pet)" button>
-        <ion-icon [name]="getEspecieIcon(pet.especie)" slot="start" class="especie-icon"></ion-icon>
+        <ion-avatar slot="start" class="pet-avatar" *ngIf="pet.foto">
+          <img [src]="pet.foto" alt="{{ pet.nome }}" />
+        </ion-avatar>
+        <div slot="start" class="pet-avatar-icon" *ngIf="!pet.foto">
+          <ion-icon [name]="getEspecieIcon(pet.especie)"></ion-icon>
+        </div>
         <ion-label>
           <h2>{{ pet.nome }}</h2>
           <p>{{ pet.especie | titlecase }} - {{ pet.raca }}</p>

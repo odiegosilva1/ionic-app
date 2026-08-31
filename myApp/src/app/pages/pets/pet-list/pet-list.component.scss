@@ -1,4 +1,24 @@
-.especie-icon {
+.pet-avatar {
+  width: 48px;
+  height: 48px;
+}
+
+.pet-avatar img {
+  object-fit: cover;
+}
+
+.pet-avatar-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--ion-color-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pet-avatar-icon ion-icon {
+  font-size: 26px;
   color: var(--ion-color-secondary);
 }
 

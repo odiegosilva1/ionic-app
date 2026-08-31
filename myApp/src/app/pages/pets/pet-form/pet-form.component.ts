@@ -1,8 +1,9 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, ActionSheetController } from '@ionic/angular';
 import { Router, ActivatedRoute } from '@angular/router';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { Pet } from '../../../models/pet.model';
 import { Cliente } from '../../../models/cliente.model';
 import { PetService } from '../../../services/pet.service';
@@ -48,6 +49,63 @@ export class PetFormComponent implements OnInit {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private toast = inject(ToastService);
+  private actionSheetController = inject(ActionSheetController);
+
+  get fotoPreview(): string {
+    return this.pet.foto ?? '';
+  }
+
+  async selectFoto() {
+    const actionSheet = await this.actionSheetController.create({
+      header: 'Foto do pet',
+      buttons: [
+        {
+          text: 'Tirar foto',
+          icon: 'camera',
+          handler: () => this.captureFoto(CameraSource.Camera),
+        },
+        {
+          text: 'Escolher da galeria',
+          icon: 'images',
+          handler: () => this.captureFoto(CameraSource.Photos),
+        },
+        {
+          text: 'Remover foto',
+          icon: 'trash',
+          role: 'destructive',
+          handler: () => {
+            this.pet.foto = undefined;
+          },
+        },
+        {
+          text: 'Cancelar',
+          icon: 'close',
+          role: 'cancel',
+        },
+      ],
+    });
+    await actionSheet.present();
+  }
+
+  async captureFoto(source: CameraSource) {
+    try {
+      const photo = await Camera.getPhoto({
+        quality: 80,
+        allowEditing: false,
+        resultType: CameraResultType.DataUrl,
+        source,
+      });
+      if (photo.dataUrl) {
+        this.pet.foto = photo.dataUrl;
+      }
+    } catch (error) {
+      if ((error as any)?.message === 'User cancelled photos app') {
+        return;
+      }
+      console.error('Erro ao capturar foto:', error);
+      await this.toast.error('Erro ao capturar foto');
+    }
+  }
 
   async ngOnInit() {
     await this.loadClientes();

@@ -14,6 +14,18 @@
 
 <ion-content class="ion-padding">
   <form #form="ngForm" (ngSubmit)="onSubmit()">
+    <div class="pet-photo" (click)="selectFoto()" role="button" tabindex="0" aria-label="Alterar foto do pet">
+      <ion-avatar class="pet-avatar">
+        <img *ngIf="fotoPreview" [src]="fotoPreview" alt="Foto do pet" />
+        <div *ngIf="!fotoPreview" class="avatar-placeholder">
+          <ion-icon name="camera"></ion-icon>
+        </div>
+      </ion-avatar>
+      <ion-text class="photo-hint">
+        <small>{{ fotoPreview ? 'Toque para trocar/remover a foto' : 'Toque para adicionar a foto do pet' }}</small>
+      </ion-text>
+    </div>
+
     <ion-list>
       <ion-item>
         <ion-label position="stacked">Nome</ion-label>

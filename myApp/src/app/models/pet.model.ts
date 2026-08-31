@@ -6,6 +6,7 @@ export interface Pet {
   idade: number;
   peso: number;
   cliente_id: number;
+  foto?: string;
   created_at?: string;
 }
 
