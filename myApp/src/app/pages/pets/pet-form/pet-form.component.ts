@@ -172,7 +172,7 @@ export class PetFormComponent implements OnInit {
     }
 
     if (!this.pet.nome.trim()) {
-      await this.toast.warning('Nome e obrigatorio');
+      await this.toast.warning('Nome é obrigatório');
       return;
     }
 

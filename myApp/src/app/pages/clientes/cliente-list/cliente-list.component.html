@@ -1,12 +1,12 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Clientes</ion-title>
+    <ion-title>Ranking de Tutores</ion-title>
   </ion-toolbar>
   <ion-toolbar>
     <ion-searchbar
       [(ngModel)]="searchTerm"
       (ionInput)="onSearch()"
-      placeholder="Buscar clientes..."
+      placeholder="Buscar tutor ou pet..."
       debounce="300"
     ></ion-searchbar>
   </ion-toolbar>
@@ -17,50 +17,43 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <div class="meu-perfil" *ngIf="meuPerfil">
-    <ion-card color="primary" (click)="editMeuPerfil()" button>
-      <ion-card-header>
-        <ion-card-subtitle>Meu Perfil</ion-card-subtitle>
-        <ion-card-title>{{ meuPerfil.nome }}</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <p *ngIf="meuPerfil.email">{{ meuPerfil.email }}</p>
-        <p *ngIf="meuPerfil.telefone">{{ meuPerfil.telefone }}</p>
-        <p *ngIf="!meuPerfil.telefone && !meuPerfil.endereco" class="ion-text-italic">Toque para completar seu perfil</p>
-        <div class="perfil-action">
-          <ion-icon name="chevron-forward-outline"></ion-icon>
+  <ion-list class="crud-list ranking-list" *ngIf="ranking.length > 0">
+    <ion-item-sliding *ngFor="let item of ranking">
+      <ion-item (click)="goToForm(item.cliente)" button>
+        <div slot="start" class="rank-badge" [class.top]="item.posicao <= 3">
+          <span class="rank-position">{{ posicaoLabel(item.posicao) }}</span>
         </div>
-      </ion-card-content>
-    </ion-card>
-  </div>
-
-  <ion-list class="crud-list" *ngIf="clientes.length > 0">
-    <ion-list-header>
-      <ion-label color="medium">Outros Clientes</ion-label>
-    </ion-list-header>
-    <ion-item-sliding *ngFor="let cliente of clientes">
-      <ion-item (click)="goToForm(cliente)" button>
-        <ion-icon name="person-outline" slot="start"></ion-icon>
         <ion-label>
-          <h2>{{ cliente.nome }}</h2>
-          <p *ngIf="cliente.telefone">{{ cliente.telefone }}</p>
-          <p *ngIf="cliente.email" class="ion-text-wrap">{{ cliente.email }}</p>
+          <h2 class="rank-name">{{ item.cliente.nome }}</h2>
+          <div class="rank-pets">
+            <div class="rank-pet" *ngFor="let pet of item.pets" (click)="goToPet(pet); $event.stopPropagation()">
+              <ion-avatar class="pet-avatar" *ngIf="pet.foto">
+                <img [src]="pet.foto" alt="{{ pet.nome }}" />
+              </ion-avatar>
+              <div class="pet-avatar pet-avatar-icon" *ngIf="!pet.foto">
+                <ion-icon [name]="getEspecieIcon(pet.especie)"></ion-icon>
+              </div>
+              <span class="pet-name">{{ pet.nome }}</span>
+            </div>
+            <div class="rank-pet empty" *ngIf="item.pets.length === 0">
+              <span class="pet-name">Sem pets</span>
+            </div>
+          </div>
         </ion-label>
-        <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
       </ion-item>
 
       <ion-item-options side="end">
-        <ion-item-option color="danger" (click)="onDelete(cliente)">
+        <ion-item-option color="danger" (click)="onDelete(item.cliente)" aria-label="Excluir tutor">
           <ion-icon slot="icon-only" name="trash"></ion-icon>
         </ion-item-option>
       </ion-item-options>
     </ion-item-sliding>
   </ion-list>
 
-  <ion-list *ngIf="clientes.length === 0 && !meuPerfil">
+  <ion-list *ngIf="ranking.length === 0">
     <ion-item>
       <ion-label class="ion-text-center">
-        <p>Nenhum cliente encontrado</p>
+        <p>Nenhum tutor encontrado</p>
       </ion-label>
     </ion-item>
   </ion-list>

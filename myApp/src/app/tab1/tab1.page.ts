@@ -60,12 +60,16 @@ export class Tab1Page implements OnInit {
     return this.meusPets[0]?.nome ?? 'seu pet';
   }
 
+  get petDestaque(): PetComTutor | null {
+    return this.meusPets[0] ?? null;
+  }
+
   getEspecieIcon(especie: string): string {
     const icons: Record<string, string> = {
-      cachorro: 'bug-outline',
-      gato: 'bug-outline',
-      ave: 'flower-outline',
-      peixe: 'water-outline',
+      cachorro: 'paw-outline',
+      gato: 'paw-outline',
+      ave: 'leaf-outline',
+      peixe: 'fish-outline',
       reptil: 'bug-outline',
       outro: 'help-circle-outline',
     };

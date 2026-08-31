@@ -20,94 +20,100 @@
 .welcome-msg {
   display: flex;
   align-items: center;
+  justify-content: center;
+  text-align: center;
   gap: 8px;
-  padding: 12px 16px;
-  margin-bottom: var(--space-md);
+  padding: 16px;
+  margin: 0 auto var(--space-lg);
   background: var(--ion-color-light);
   border-radius: var(--radius-card);
   font-size: 16px;
   color: var(--ion-color-dark);
-
-  ion-icon {
-    font-size: 22px;
-    color: var(--ion-color-primary);
-  }
-
-  .pet-avatar {
-    width: 36px;
-    height: 36px;
-
-    img {
-      object-fit: cover;
-    }
-  }
-
-  .pet-avatar-icon {
-    background: var(--ion-color-light);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    ion-icon {
-      font-size: 20px;
-    }
-  }
 
   strong {
     color: var(--ion-color-primary);
   }
 }
 
-.section-title {
-  margin: 8px 0 12px;
-
-  h2 {
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--ion-color-dark);
-  }
-}
-
-.pet-list {
+.pet-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 24px 16px;
+  margin: 0 auto;
+  background: var(--ion-color-light);
   border-radius: var(--radius-card);
-  overflow: hidden;
-
-  ion-item {
-    --min-height: 70px;
-  }
-
-  h2 {
-    font-weight: 700;
-    color: var(--ion-color-dark);
-  }
-
-  p {
-    font-size: 13px;
-    color: var(--ion-color-medium);
-  }
+  border: 1px solid var(--card-border-color, rgba(142, 111, 216, 0.14));
 }
 
-.pet-avatar {
-  width: 48px;
-  height: 48px;
-
-  img {
-    object-fit: cover;
-  }
+.pet-photo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--space-md);
+  cursor: pointer;
 }
 
-.pet-avatar-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
+.pet-photo-avatar {
+  width: 140px;
+  height: 140px;
+  border: 3px solid var(--ion-color-primary);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.pet-photo-avatar img {
+  object-fit: cover;
+}
+
+.pet-photo-icon {
   background: var(--ion-color-light);
   display: flex;
   align-items: center;
   justify-content: center;
 
   ion-icon {
-    font-size: 26px;
-    color: var(--ion-color-secondary);
+    font-size: 64px;
+    color: var(--ion-color-primary);
+  }
+}
+
+.pet-name {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ion-color-dark);
+  margin: 0 0 var(--space-md);
+  text-transform: capitalize;
+}
+
+.pet-infos {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+  width: 100%;
+  padding: 0;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  width: 100%;
+  background: var(--ion-color-light);
+  border: 1px solid var(--card-border-color, rgba(142, 111, 216, 0.14));
+  border-radius: var(--radius-card);
+  font-size: 15px;
+  color: var(--ion-color-dark);
+
+  ion-icon {
+    font-size: 20px;
+    color: var(--ion-color-primary);
+    flex-shrink: 0;
+  }
+
+  span {
+    text-transform: capitalize;
   }
 }
 

@@ -72,7 +72,7 @@ export class PetListComponent implements OnInit {
           handler: async () => {
             try {
               await this.petService.delete(pet.id!);
-              await this.toast.success('Pet excluido com sucesso');
+              await this.toast.success('Pet excluído com sucesso');
               await this.loadPets();
             } catch (error) {
               console.error('Erro ao excluir pet:', error);
@@ -88,10 +88,10 @@ export class PetListComponent implements OnInit {
 
   getEspecieIcon(especie: string): string {
     const icons: Record<string, string> = {
-      cachorro: 'bug-outline',
-      gato: 'bug-outline',
-      ave: 'flower-outline',
-      peixe: 'water-outline',
+      cachorro: 'paw-outline',
+      gato: 'paw-outline',
+      ave: 'leaf-outline',
+      peixe: 'fish-outline',
       reptil: 'bug-outline',
       outro: 'help-circle-outline',
     };

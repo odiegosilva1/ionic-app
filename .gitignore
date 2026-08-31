@@ -1,0 +1,5 @@
+# APKs e artefatos de build não devem ir para o remoto
+**/*.apk
+**/*.aab
+**/build/
+node_modules/

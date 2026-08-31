@@ -60,7 +60,7 @@ export class ClienteFormComponent implements OnInit {
     }
 
     if (!this.cliente.nome.trim()) {
-      await this.toast.warning('Nome e obrigatorio');
+      await this.toast.warning('Nome é obrigatório');
       return;
     }
 

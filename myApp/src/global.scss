@@ -47,19 +47,38 @@ ion-item ion-icon[slot='start'] {
 /* Previne rolagem lateral (layout 100% responsivo) */
 html,
 body,
-ion-app {
+ion-app,
+.ion-page {
   overflow-x: hidden;
   max-width: 100%;
 }
 
 ion-content {
+  --overflow: auto;
   overflow-x: hidden;
+}
+
+ion-content .inner-scroll,
+ion-content .scroll-y,
+ion-content .scroll-x {
+  overflow-x: hidden !important;
+}
+
+/* Contém o ion-searchbar dentro dos toolbars (evita overflow lateral) */
+ion-toolbar {
+  overflow: hidden;
+  padding-inline: max(var(--ion-safe-area-left, 0px), 0px);
 }
 
 *,
 *::before,
 *::after {
   box-sizing: border-box;
+}
+
+img,
+ion-icon {
+  max-width: 100%;
 }
 
 *::-webkit-scrollbar {

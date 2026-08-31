@@ -4,9 +4,16 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule, AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Cliente } from '../../../models/cliente.model';
+import { Pet } from '../../../models/pet.model';
 import { ClienteService } from '../../../services/cliente.service';
-import { AuthService } from '../../../services/auth.service';
+import { PetService } from '../../../services/pet.service';
 import { ToastService } from '../../../services/toast.service';
+
+interface RankingItem {
+  posicao: number;
+  cliente: Cliente;
+  pets: Pet[];
+}
 
 @Component({
   selector: 'app-cliente-list',
@@ -16,49 +23,88 @@ import { ToastService } from '../../../services/toast.service';
   styleUrls: ['./cliente-list.component.scss'],
 })
 export class ClienteListComponent implements OnInit {
-  clientes: Cliente[] = [];
-  meuPerfil: Cliente | null = null;
+  ranking: RankingItem[] = [];
   searchTerm = '';
 
   private clienteService = inject(ClienteService);
-  private authService = inject(AuthService);
+  private petService = inject(PetService);
   private router = inject(Router);
   private alertController = inject(AlertController);
   private toast = inject(ToastService);
 
   async ngOnInit() {
-    await this.loadClientes();
+    await this.loadRanking();
   }
 
-  async loadClientes() {
+  async loadRanking() {
     try {
-      const usuario = this.authService.getCurrentUser();
-      const todos = await this.clienteService.getAll();
+      const clientes = await this.clienteService.getAll();
 
-      if (usuario) {
-        this.meuPerfil = todos.find((c) => c.usuario_id === usuario.id) ?? null;
-        this.clientes = todos.filter((c) => c.usuario_id !== usuario.id);
-      } else {
-        this.meuPerfil = null;
-        this.clientes = todos;
+      const itens: RankingItem[] = [];
+      for (const cliente of clientes) {
+        const pets = cliente.id ? await this.petService.getByClienteId(cliente.id) : [];
+        itens.push({ posicao: 0, cliente, pets });
       }
+
+      itens.sort((a, b) => b.pets.length - a.pets.length);
+
+      itens.forEach((item, index) => {
+        item.posicao = index + 1;
+      });
+
+      this.ranking = itens;
     } catch (error) {
-      console.error('Erro ao carregar clientes:', error);
-      await this.toast.error('Erro ao carregar clientes');
+      console.error('Erro ao carregar ranking:', error);
+      await this.toast.error('Erro ao carregar ranking');
     }
   }
 
   async onSearch() {
     try {
-      this.clientes = await this.clienteService.search(this.searchTerm);
+      const termo = this.searchTerm.trim().toLowerCase();
+      if (!termo) {
+        await this.loadRanking();
+        return;
+      }
+      const all = this.ranking;
+      this.ranking = all
+        .filter(
+          (item) =>
+            item.cliente.nome.toLowerCase().includes(termo) ||
+            item.pets.some((p) => p.nome.toLowerCase().includes(termo))
+        )
+        .map((item, index) => ({ ...item, posicao: index + 1 }));
     } catch (error) {
-      console.error('Erro ao buscar clientes:', error);
+      console.error('Erro ao buscar:', error);
     }
   }
 
   async onRefresh(event: any) {
-    await this.loadClientes();
+    await this.loadRanking();
     event.target.complete();
+  }
+
+  posicaoLabel(posicao: number): string {
+    return `${posicao}º`;
+  }
+
+  getMedalIcon(posicao: number): string {
+    if (posicao === 1) return 'trophy-outline';
+    if (posicao === 2) return 'medal-outline';
+    if (posicao === 3) return 'medal-outline';
+    return 'podium-outline';
+  }
+
+  getEspecieIcon(especie: string): string {
+    const icons: Record<string, string> = {
+      cachorro: 'paw-outline',
+      gato: 'paw-outline',
+      ave: 'leaf-outline',
+      peixe: 'fish-outline',
+      reptil: 'bug-outline',
+      outro: 'help-circle-outline',
+    };
+    return icons[especie] || 'help-circle-outline';
   }
 
   goToForm(cliente?: Cliente) {
@@ -69,9 +115,9 @@ export class ClienteListComponent implements OnInit {
     }
   }
 
-  editMeuPerfil() {
-    if (this.meuPerfil) {
-      this.router.navigate(['/tabs/clientes/form', this.meuPerfil.id]);
+  goToPet(pet: Pet) {
+    if (pet.id != null) {
+      this.router.navigate(['/tabs/pets/form', pet.id]);
     }
   }
 
@@ -90,8 +136,8 @@ export class ClienteListComponent implements OnInit {
           handler: async () => {
             try {
               await this.clienteService.delete(cliente.id!);
-              await this.toast.success('Cliente excluido com sucesso');
-              await this.loadClientes();
+              await this.toast.success('Cliente excluído com sucesso');
+              await this.loadRanking();
             } catch (error) {
               console.error('Erro ao excluir cliente:', error);
               await this.toast.error('Erro ao excluir cliente');
@@ -104,4 +150,3 @@ export class ClienteListComponent implements OnInit {
     await alert.present();
   }
 }
-

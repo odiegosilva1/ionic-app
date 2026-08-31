@@ -38,11 +38,11 @@
       </ion-item>
 
       <ion-item>
-        <ion-label position="stacked">Especie</ion-label>
+        <ion-label position="stacked">Espécie</ion-label>
         <ion-select
           [(ngModel)]="pet.especie"
           name="especie"
-          placeholder="Selecione a especie"
+          placeholder="Selecione a espécie"
           interface="popover"
         >
           <ion-select-option *ngFor="let especie of especies" [value]="especie.value">
@@ -52,11 +52,11 @@
       </ion-item>
 
       <ion-item>
-        <ion-label position="stacked">Raca</ion-label>
+        <ion-label position="stacked">Raça</ion-label>
         <ion-input
           [(ngModel)]="pet.raca"
           name="raca"
-          placeholder="Raca do pet"
+          placeholder="Raça do pet"
         ></ion-input>
       </ion-item>
 

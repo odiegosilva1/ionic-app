@@ -23,27 +23,38 @@
       Olá, <strong>{{ userName }}</strong>! Este é o <strong>{{ petNomeSaudacao }}</strong>
     </div>
 
-    <div class="section-title" *ngIf="meusPets.length > 0">
-      <h2>Meus pets</h2>
-    </div>
-
-    <ion-list class="pet-list" *ngIf="meusPets.length > 0">
-      <ion-item (click)="goToPet(pet)" button *ngFor="let pet of meusPets">
-        <ion-avatar slot="start" class="pet-avatar" *ngIf="pet.foto">
-          <img [src]="pet.foto" alt="{{ pet.nome }}" />
-        </ion-avatar>
-        <div slot="start" class="pet-avatar-icon" *ngIf="!pet.foto">
-          <ion-icon [name]="getEspecieIcon(pet.especie)"></ion-icon>
+    <ng-container *ngIf="petDestaque">
+      <div class="pet-profile">
+        <div class="pet-photo" (click)="goToPet(petDestaque)">
+          <ion-avatar class="pet-photo-avatar" *ngIf="petDestaque.foto">
+            <img [src]="petDestaque.foto" alt="{{ petDestaque.nome }}" />
+          </ion-avatar>
+          <div class="pet-photo-avatar pet-photo-icon" *ngIf="!petDestaque.foto">
+            <ion-icon [name]="getEspecieIcon(petDestaque.especie)"></ion-icon>
+          </div>
         </div>
-        <ion-label>
-          <h2>{{ pet.nome }}</h2>
-          <p>{{ pet.especie | titlecase }}{{ pet.raca ? ' - ' + pet.raca : '' }}</p>
-          <p *ngIf="pet.idade !== null && pet.idade !== undefined">Idade: {{ pet.idade }} anos</p>
-          <p *ngIf="pet.peso !== null && pet.peso !== undefined">Peso: {{ pet.peso }} kg</p>
-        </ion-label>
-        <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
-      </ion-item>
-    </ion-list>
+        <h2 class="pet-name">{{ petDestaque.nome }}</h2>
+
+        <div class="pet-infos">
+          <div class="info-item">
+            <ion-icon [name]="getEspecieIcon(petDestaque.especie)"></ion-icon>
+            <span>{{ petDestaque.especie | titlecase }}</span>
+          </div>
+          <div class="info-item" *ngIf="petDestaque.raca">
+            <ion-icon name="ribbon-outline"></ion-icon>
+            <span>{{ petDestaque.raca }}</span>
+          </div>
+          <div class="info-item" *ngIf="petDestaque.idade !== null && petDestaque.idade !== undefined">
+            <ion-icon name="calendar-outline"></ion-icon>
+            <span>{{ petDestaque.idade }} anos</span>
+          </div>
+          <div class="info-item" *ngIf="petDestaque.peso !== null && petDestaque.peso !== undefined">
+            <ion-icon name="scale-outline"></ion-icon>
+            <span>{{ petDestaque.peso }} kg</span>
+          </div>
+        </div>
+      </div>
+    </ng-container>
 
     <div *ngIf="meusPets.length === 0" class="empty-state">
       <ion-icon name="paw-outline"></ion-icon>
