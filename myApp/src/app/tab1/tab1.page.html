@@ -5,6 +5,11 @@
         <img src="assets/icon/logo-pet.png" alt="Logo PetShop" />
       </div>
     </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()" aria-label="Sair">
+        <ion-icon slot="icon-only" name="log-out-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -55,11 +60,11 @@
         <ion-card-title>Acesso Rapido</ion-card-title>
       </ion-card-header>
       <ion-card-content>
-        <ion-button expand="block" (click)="goToClientes()">
+        <ion-button expand="block" (click)="novoCliente()">
           <ion-icon name="person-add-outline" slot="start"></ion-icon>
           Cadastrar Cliente
         </ion-button>
-        <ion-button expand="block" (click)="goToPets()">
+        <ion-button expand="block" (click)="novoPet()">
           <ion-icon name="add-circle-outline" slot="start"></ion-icon>
           Cadastrar Pet
         </ion-button>

@@ -5,12 +5,12 @@
     </ion-buttons>
     <ion-title>{{ isEditing ? 'Editar Pet' : 'Novo Pet' }}</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="onSubmit()" strong>Salvar</ion-button>
+      <ion-button (click)="onSubmit()" strong [disabled]="loading">Salvar</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="ion-padding">
   <form #form="ngForm" (ngSubmit)="onSubmit()">
     <ion-list>
       <ion-item>

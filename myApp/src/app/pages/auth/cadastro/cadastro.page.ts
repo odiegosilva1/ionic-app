@@ -1,18 +1,21 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule, ToastController, ModalController } from '@ionic/angular';
+import { IonicModule, ModalController } from '@ionic/angular';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
+import { ToastService } from '../../../services/toast.service';
 import { PrivacidadePage } from '../../privacidade/privacidade.page';
 import { sanitizeInput } from '../../../utils/sanitize';
-
-interface PasswordRule {
-  label: string;
-  test: (senha: string) => boolean;
-}
-
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+import { EMAIL_REGEX } from '../../../utils/email';
+import {
+  getPasswordStrength,
+  getStrengthColor,
+  getStrengthLabel,
+  PASSWORD_RULES,
+  PasswordRule,
+  ruleMet,
+} from '../../../utils/password';
 
 @Component({
   selector: 'app-cadastro',
@@ -31,18 +34,13 @@ export class CadastroPage {
   showConfirmPassword = false;
   aceiteTermos = false;
   aceiteTouched = false;
+  loading = false;
 
-  rules: PasswordRule[] = [
-    { label: 'Pelo menos 8 caracteres', test: (s) => s.length >= 8 },
-    { label: 'Uma letra maiúscula', test: (s) => /[A-Z]/.test(s) },
-    { label: 'Uma letra minúscula', test: (s) => /[a-z]/.test(s) },
-    { label: 'Um número', test: (s) => /[0-9]/.test(s) },
-    { label: 'Um caractere especial (!@#$%...)', test: (s) => /[^A-Za-z0-9]/.test(s) },
-  ];
+  rules: PasswordRule[] = PASSWORD_RULES;
 
   private authService = inject(AuthService);
   private router = inject(Router);
-  private toastController = inject(ToastController);
+  private toast = inject(ToastService);
   private modalController = inject(ModalController);
 
   get isEmailValid(): boolean {
@@ -54,28 +52,19 @@ export class CadastroPage {
   }
 
   get passwordStrength(): number {
-    return this.rules.filter((r) => r.test(this.senha)).length;
+    return getPasswordStrength(this.senha);
   }
 
   get strengthColor(): string {
-    const n = this.passwordStrength;
-    if (n <= 2) return 'danger';
-    if (n <= 3) return 'warning';
-    if (n <= 4) return 'medium';
-    return 'success';
+    return getStrengthColor(this.passwordStrength);
   }
 
   get strengthLabel(): string {
-    const n = this.passwordStrength;
-    if (n === 0) return '';
-    if (n <= 2) return 'Fraca';
-    if (n <= 3) return 'Razoável';
-    if (n <= 4) return 'Boa';
-    return 'Forte';
+    return getStrengthLabel(this.passwordStrength);
   }
 
   ruleMet(rule: PasswordRule): boolean {
-    return rule.test(this.senha);
+    return ruleMet(rule, this.senha);
   }
 
   async openPrivacidade(event: Event): Promise<void> {
@@ -87,64 +76,60 @@ export class CadastroPage {
   }
 
   async onRegister() {
+    if (this.loading) {
+      return;
+    }
+
     if (!this.nome.trim()) {
-      await this.showToast('Preencha o nome', 'warning');
+      await this.toast.warning('Preencha o nome');
       return;
     }
 
     if (!this.email.trim()) {
-      await this.showToast('Preencha o email', 'warning');
+      await this.toast.warning('Preencha o email');
       return;
     }
 
     if (!this.isEmailValid) {
-      await this.showToast('Email inválido', 'warning');
+      await this.toast.warning('Email inválido');
       return;
     }
 
     if (!this.senha) {
-      await this.showToast('Preencha a senha', 'warning');
+      await this.toast.warning('Preencha a senha');
       return;
     }
 
     if (!this.isPasswordValid) {
-      await this.showToast('A senha deve atender todos os 5 requisitos de segurança', 'warning');
+      await this.toast.warning('A senha deve atender todos os 5 requisitos de segurança');
       return;
     }
 
     if (this.senha !== this.confirmarSenha) {
-      await this.showToast('As senhas não coincidem', 'warning');
+      await this.toast.warning('As senhas não coincidem');
       return;
     }
 
     if (!this.aceiteTermos) {
       this.aceiteTouched = true;
-      await this.showToast('Aceite a Política de Privacidade para continuar (LGPD)', 'warning');
+      await this.toast.warning('Aceite a Política de Privacidade para continuar (LGPD)');
       return;
     }
 
+    this.loading = true;
     const result = await this.authService.register({
       nome: sanitizeInput(this.nome.trim()),
       email: this.email.trim().toLowerCase(),
       senha: this.senha,
       aceiteTermos: this.aceiteTermos,
     });
+    this.loading = false;
 
     if (result.success) {
-      await this.showToast(result.message, 'success');
+      await this.toast.success(result.message);
       this.router.navigate(['/login']);
     } else {
-      await this.showToast(result.message, 'danger');
+      await this.toast.error(result.message);
     }
-  }
-
-  private async showToast(message: string, color: string) {
-    const toast = await this.toastController.create({
-      message,
-      duration: 2000,
-      color,
-      position: 'bottom',
-    });
-    await toast.present();
   }
 }

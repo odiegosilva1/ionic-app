@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { ClienteService } from '../services/cliente.service';
 import { PetService } from '../services/pet.service';
@@ -22,6 +22,7 @@ export class Tab1Page implements OnInit {
   private petService = inject(PetService);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private alertController = inject(AlertController);
 
   async ngOnInit() {
     const user = this.authService.getCurrentUser();
@@ -49,5 +50,29 @@ export class Tab1Page implements OnInit {
 
   goToPets() {
     this.router.navigate(['/tabs/pets']);
+  }
+
+  novoCliente() {
+    this.router.navigate(['/tabs/clientes/form']);
+  }
+
+  novoPet() {
+    this.router.navigate(['/tabs/pets/form']);
+  }
+
+  logout() {
+    this.confirmLogout();
+  }
+
+  async confirmLogout() {
+    const alert = await this.alertController.create({
+      header: 'Sair',
+      message: 'Deseja realmente sair da conta?',
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        { text: 'Sair', handler: () => this.authService.logout() },
+      ],
+    });
+    await alert.present();
   }
 }

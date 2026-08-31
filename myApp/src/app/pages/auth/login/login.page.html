@@ -1,12 +1,6 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Entrar</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content class="ion-padding">
-  <div class="login-container">
-    <div class="logo-section">
+  <div class="auth-container">
+    <div class="auth-logo-section">
       <ion-icon name="paw-outline" class="logo-icon"></ion-icon>
       <h1>PetShop</h1>
       <p>Faça login para continuar</p>
@@ -42,8 +36,9 @@
         </ion-item>
       </ion-list>
 
-      <ion-button expand="block" type="submit" class="login-btn">
-        Entrar
+      <ion-button expand="block" type="submit" class="login-btn auth-submit-btn" [disabled]="loading">
+        <ion-spinner name="crescent" *ngIf="loading"></ion-spinner>
+        <span *ngIf="!loading">Entrar</span>
       </ion-button>
     </form>
 

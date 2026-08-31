@@ -1,10 +1,11 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule, ToastController } from '@ionic/angular';
+import { IonicModule } from '@ionic/angular';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Cliente } from '../../../models/cliente.model';
 import { ClienteService } from '../../../services/cliente.service';
+import { ToastService } from '../../../services/toast.service';
 
 @Component({
   selector: 'app-cliente-form',
@@ -23,11 +24,12 @@ export class ClienteFormComponent implements OnInit {
 
   isEditing = false;
   clienteId: number | null = null;
+  loading = false;
 
   private clienteService = inject(ClienteService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
-  private toastController = inject(ToastController);
+  private toast = inject(ToastService);
 
   async ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
@@ -47,44 +49,41 @@ export class ClienteFormComponent implements OnInit {
         }
       } catch (error) {
         console.error('Erro ao carregar cliente:', error);
-        await this.showToast('Erro ao carregar cliente', 'danger');
+        await this.toast.error('Erro ao carregar cliente');
       }
     }
   }
 
   async onSubmit() {
-    if (!this.cliente.nome.trim()) {
-      await this.showToast('Nome e obrigatorio', 'warning');
+    if (this.loading) {
       return;
     }
 
+    if (!this.cliente.nome.trim()) {
+      await this.toast.warning('Nome e obrigatorio');
+      return;
+    }
+
+    this.loading = true;
     try {
       if (this.isEditing && this.clienteId) {
         await this.clienteService.update(this.clienteId, this.cliente);
-        await this.showToast('Cliente atualizado com sucesso', 'success');
+        await this.toast.success('Cliente atualizado com sucesso');
       } else {
         await this.clienteService.insert(this.cliente);
-        await this.showToast('Cliente cadastrado com sucesso', 'success');
+        await this.toast.success('Cliente cadastrado com sucesso');
       }
 
       this.router.navigate(['/tabs/clientes']);
     } catch (error) {
       console.error('Erro ao salvar cliente:', error);
-      await this.showToast('Erro ao salvar cliente', 'danger');
+      await this.toast.error('Erro ao salvar cliente');
+    } finally {
+      this.loading = false;
     }
   }
 
   onCancel() {
     this.router.navigate(['/tabs/clientes']);
-  }
-
-  private async showToast(message: string, color: string) {
-    const toast = await this.toastController.create({
-      message,
-      duration: 2000,
-      color,
-      position: 'bottom',
-    });
-    await toast.present();
   }
 }

@@ -1,6 +1,5 @@
 import { Component, EnvironmentInjector, inject } from '@angular/core';
 import { IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel } from '@ionic/angular/standalone';
-import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-tabs',
@@ -10,9 +9,5 @@ import { AuthService } from '../services/auth.service';
 })
 export class TabsPage {
   public environmentInjector = inject(EnvironmentInjector);
-  private authService = inject(AuthService);
-
-  onLogout() {
-    this.authService.logout();
-  }
 }
+

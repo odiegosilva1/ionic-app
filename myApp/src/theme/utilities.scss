@@ -1,0 +1,105 @@
+/*
+ * Classes utilitárias globais compartilhadas entre as telas
+ * ----------------------------------------------------------------------------
+ * Consolida padrões visuais repetitivos (botões, cards, formulários) em um
+ * único lugar, garantindo consistência entre todas as páginas.
+ */
+
+/* Botão de ação primária unificado */
+.auth-submit-btn,
+.primary-btn {
+  --border-radius: var(--radius-button);
+  height: var(--button-height);
+  margin-top: var(--space-lg);
+  font-weight: 600;
+}
+
+/* Formulário de autenticação: alinhamento e espaçamento consistente */
+.auth-container {
+  padding: 20px;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.auth-logo-section {
+  text-align: center;
+  margin-bottom: var(--space-xl);
+
+  .logo-icon {
+    font-size: 70px;
+    color: var(--ion-color-primary);
+  }
+
+  h1 {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 8px 0 4px;
+  }
+
+  p {
+    color: var(--ion-color-medium);
+    font-size: 14px;
+    margin: 0;
+  }
+}
+
+/* Força da senha */
+.password-rules {
+  margin: 0 16px 8px;
+}
+
+.strength-bar {
+  height: 4px;
+  background: var(--ion-color-light);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.strength-fill {
+  display: block;
+  height: 100%;
+  transition: width 0.3s, background-color 0.3s;
+}
+
+.rules-list {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 0;
+
+  li {
+    font-size: 13px;
+    color: var(--ion-color-medium);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+
+    ion-icon {
+      font-size: 14px;
+    }
+
+    &.met {
+      color: var(--ion-color-success);
+    }
+  }
+}
+
+/* Listas com busca e resumo */
+.crud-list {
+  ion-item {
+    --min-height: 70px;
+  }
+
+  h2 {
+    font-weight: 600;
+    margin: 0;
+  }
+
+  p {
+    color: var(--ion-color-medium);
+    font-size: 14px;
+    margin: 4px 0 0;
+  }
+}

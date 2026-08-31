@@ -1,11 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule, ToastController } from '@ionic/angular';
+import { IonicModule } from '@ionic/angular';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
-
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+import { ToastService } from '../../../services/toast.service';
+import { EMAIL_REGEX } from '../../../utils/email';
 
 @Component({
   selector: 'app-esqueci-senha',
@@ -18,42 +18,39 @@ export class EsqueciSenhaPage {
   email = '';
   emailTouched = false;
   enviado = false;
+  loading = false;
 
   private authService = inject(AuthService);
   private router = inject(Router);
-  private toastController = inject(ToastController);
+  private toast = inject(ToastService);
 
   get isEmailValid(): boolean {
     return EMAIL_REGEX.test(this.email);
   }
 
   async onSubmit() {
+    if (this.loading) {
+      return;
+    }
+
     if (!this.email.trim()) {
-      await this.showToast('Informe seu email', 'warning');
+      await this.toast.warning('Informe seu email');
       return;
     }
 
     if (!this.isEmailValid) {
-      await this.showToast('Email inválido', 'warning');
+      await this.toast.warning('Email inválido');
       return;
     }
 
+    this.loading = true;
     const result = await this.authService.forgotPassword(this.email.trim().toLowerCase());
+    this.loading = false;
 
     if (result.success) {
       this.enviado = true;
     } else {
-      await this.showToast(result.message, 'danger');
+      await this.toast.error(result.message);
     }
-  }
-
-  private async showToast(message: string, color: string) {
-    const toast = await this.toastController.create({
-      message,
-      duration: 2000,
-      color,
-      position: 'bottom',
-    });
-    await toast.present();
   }
 }

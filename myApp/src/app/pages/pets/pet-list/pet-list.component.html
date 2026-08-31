@@ -17,10 +17,10 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <ion-list *ngIf="pets.length > 0">
+  <ion-list class="crud-list" *ngIf="pets.length > 0">
     <ion-item-sliding *ngFor="let pet of pets">
       <ion-item (click)="goToForm(pet)" button>
-        <ion-icon name="paw-outline" slot="start"></ion-icon>
+        <ion-icon [name]="getEspecieIcon(pet.especie)" slot="start" class="especie-icon"></ion-icon>
         <ion-label>
           <h2>{{ pet.nome }}</h2>
           <p>{{ pet.especie | titlecase }} - {{ pet.raca }}</p>

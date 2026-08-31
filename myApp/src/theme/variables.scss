@@ -9,6 +9,16 @@
   --ion-font-family: 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial,
     sans-serif;
 
+  /* Tokens de design compartilhados */
+  --radius-card: 12px;
+  --radius-button: 12px;
+  --button-height: 48px;
+  --card-border-color: rgba(142, 111, 216, 0.14);
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 40px;
+
   /* Primary - lilás médio */
   --ion-color-primary: #8e6fd8;
   --ion-color-primary-rgb: 142, 111, 216;
