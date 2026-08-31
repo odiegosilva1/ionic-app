@@ -57,9 +57,23 @@ export class PetFormComponent implements OnInit {
       this.isEditing = true;
       this.petId = parseInt(id, 10);
       await this.loadPet();
-    } else if (this.meuPerfilId) {
-      this.pet.cliente_id = this.meuPerfilId;
+    } else {
+      this.resetForm();
+      if (this.meuPerfilId) {
+        this.pet.cliente_id = this.meuPerfilId;
+      }
     }
+  }
+
+  resetForm() {
+    this.pet = {
+      nome: '',
+      especie: 'cachorro',
+      raca: '',
+      idade: 0,
+      peso: 0,
+      cliente_id: 0,
+    };
   }
 
   async loadClientes() {
